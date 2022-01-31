@@ -18,6 +18,8 @@ Arene_light
 
 CMakeCache.txt
 
+CMakeFiles/
+
 .vscode/*
 
 # Local History for Visual Studio Code
