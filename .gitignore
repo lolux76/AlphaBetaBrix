@@ -6,6 +6,18 @@ joueurs/cmake_install.cmake
 
 joueurs/CMakeCache.txt
 
+joueurs/Makefile
+
+Makefile
+
+CMakeCache
+
+cmake_install.cmake
+
+Arene_light
+
+CMakeCache.txt
+
 .vscode/*
 
 # Local History for Visual Studio Code
