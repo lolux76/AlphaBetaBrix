@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/etud/Bureau/IPSI/distribCaro/joueurs
+CMAKE_SOURCE_DIR = /home/etud/Bureau/IPSI/distribCaro
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/etud/Bureau/IPSI/distribCaro/joueurs
+CMAKE_BINARY_DIR = /home/etud/Bureau/IPSI/distribCaro
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,14 +80,14 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/etud/Bureau/IPSI/distribCaro/joueurs/CMakeFiles /home/etud/Bureau/IPSI/distribCaro/joueurs/CMakeFiles/progress.marks
-	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/etud/Bureau/IPSI/distribCaro/joueurs/CMakeFiles 0
+	cd /home/etud/Bureau/IPSI/distribCaro && $(CMAKE_COMMAND) -E cmake_progress_start /home/etud/Bureau/IPSI/distribCaro/CMakeFiles /home/etud/Bureau/IPSI/distribCaro/joueurs/CMakeFiles/progress.marks
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f CMakeFiles/Makefile2 joueurs/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/etud/Bureau/IPSI/distribCaro/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	$(MAKE) -f CMakeFiles/Makefile2 clean
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f CMakeFiles/Makefile2 joueurs/clean
 .PHONY : clean
 
 # The main clean target
@@ -97,30 +97,32 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f CMakeFiles/Makefile2 joueurs/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	$(MAKE) -f CMakeFiles/Makefile2 preinstall
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f CMakeFiles/Makefile2 joueurs/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/etud/Bureau/IPSI/distribCaro && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
-#=============================================================================
-# Target rules for targets named joueurs
+# Convenience name for target.
+joueurs/CMakeFiles/joueurs.dir/rule:
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f CMakeFiles/Makefile2 joueurs/CMakeFiles/joueurs.dir/rule
+.PHONY : joueurs/CMakeFiles/joueurs.dir/rule
 
-# Build rule for target.
-joueurs: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 joueurs
+# Convenience name for target.
+joueurs: joueurs/CMakeFiles/joueurs.dir/rule
+
 .PHONY : joueurs
 
 # fast build rule for target.
 joueurs/fast:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/build
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/build
 .PHONY : joueurs/fast
 
 joueur.o: joueur.cc.o
@@ -129,7 +131,7 @@ joueur.o: joueur.cc.o
 
 # target to build an object file
 joueur.cc.o:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur.cc.o
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur.cc.o
 .PHONY : joueur.cc.o
 
 joueur.i: joueur.cc.i
@@ -138,7 +140,7 @@ joueur.i: joueur.cc.i
 
 # target to preprocess a source file
 joueur.cc.i:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur.cc.i
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur.cc.i
 .PHONY : joueur.cc.i
 
 joueur.s: joueur.cc.s
@@ -147,7 +149,7 @@ joueur.s: joueur.cc.s
 
 # target to generate assembly for a file
 joueur.cc.s:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur.cc.s
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur.cc.s
 .PHONY : joueur.cc.s
 
 joueur_alphabeta.o: joueur_alphabeta.cc.o
@@ -156,7 +158,7 @@ joueur_alphabeta.o: joueur_alphabeta.cc.o
 
 # target to build an object file
 joueur_alphabeta.cc.o:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur_alphabeta.cc.o
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur_alphabeta.cc.o
 .PHONY : joueur_alphabeta.cc.o
 
 joueur_alphabeta.i: joueur_alphabeta.cc.i
@@ -165,7 +167,7 @@ joueur_alphabeta.i: joueur_alphabeta.cc.i
 
 # target to preprocess a source file
 joueur_alphabeta.cc.i:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur_alphabeta.cc.i
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur_alphabeta.cc.i
 .PHONY : joueur_alphabeta.cc.i
 
 joueur_alphabeta.s: joueur_alphabeta.cc.s
@@ -174,7 +176,7 @@ joueur_alphabeta.s: joueur_alphabeta.cc.s
 
 # target to generate assembly for a file
 joueur_alphabeta.cc.s:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur_alphabeta.cc.s
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur_alphabeta.cc.s
 .PHONY : joueur_alphabeta.cc.s
 
 joueur_manuel.o: joueur_manuel.cc.o
@@ -183,7 +185,7 @@ joueur_manuel.o: joueur_manuel.cc.o
 
 # target to build an object file
 joueur_manuel.cc.o:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur_manuel.cc.o
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur_manuel.cc.o
 .PHONY : joueur_manuel.cc.o
 
 joueur_manuel.i: joueur_manuel.cc.i
@@ -192,7 +194,7 @@ joueur_manuel.i: joueur_manuel.cc.i
 
 # target to preprocess a source file
 joueur_manuel.cc.i:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur_manuel.cc.i
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur_manuel.cc.i
 .PHONY : joueur_manuel.cc.i
 
 joueur_manuel.s: joueur_manuel.cc.s
@@ -201,7 +203,7 @@ joueur_manuel.s: joueur_manuel.cc.s
 
 # target to generate assembly for a file
 joueur_manuel.cc.s:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur_manuel.cc.s
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur_manuel.cc.s
 .PHONY : joueur_manuel.cc.s
 
 joueur_montecarlo_.o: joueur_montecarlo_.cc.o
@@ -210,7 +212,7 @@ joueur_montecarlo_.o: joueur_montecarlo_.cc.o
 
 # target to build an object file
 joueur_montecarlo_.cc.o:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur_montecarlo_.cc.o
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur_montecarlo_.cc.o
 .PHONY : joueur_montecarlo_.cc.o
 
 joueur_montecarlo_.i: joueur_montecarlo_.cc.i
@@ -219,7 +221,7 @@ joueur_montecarlo_.i: joueur_montecarlo_.cc.i
 
 # target to preprocess a source file
 joueur_montecarlo_.cc.i:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur_montecarlo_.cc.i
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur_montecarlo_.cc.i
 .PHONY : joueur_montecarlo_.cc.i
 
 joueur_montecarlo_.s: joueur_montecarlo_.cc.s
@@ -228,7 +230,7 @@ joueur_montecarlo_.s: joueur_montecarlo_.cc.s
 
 # target to generate assembly for a file
 joueur_montecarlo_.cc.s:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur_montecarlo_.cc.s
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur_montecarlo_.cc.s
 .PHONY : joueur_montecarlo_.cc.s
 
 joueur_random.o: joueur_random.cc.o
@@ -237,7 +239,7 @@ joueur_random.o: joueur_random.cc.o
 
 # target to build an object file
 joueur_random.cc.o:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur_random.cc.o
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur_random.cc.o
 .PHONY : joueur_random.cc.o
 
 joueur_random.i: joueur_random.cc.i
@@ -246,7 +248,7 @@ joueur_random.i: joueur_random.cc.i
 
 # target to preprocess a source file
 joueur_random.cc.i:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur_random.cc.i
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur_random.cc.i
 .PHONY : joueur_random.cc.i
 
 joueur_random.s: joueur_random.cc.s
@@ -255,7 +257,7 @@ joueur_random.s: joueur_random.cc.s
 
 # target to generate assembly for a file
 joueur_random.cc.s:
-	$(MAKE) -f CMakeFiles/joueurs.dir/build.make CMakeFiles/joueurs.dir/joueur_random.cc.s
+	cd /home/etud/Bureau/IPSI/distribCaro && $(MAKE) -f joueurs/CMakeFiles/joueurs.dir/build.make joueurs/CMakeFiles/joueurs.dir/joueur_random.cc.s
 .PHONY : joueur_random.cc.s
 
 # Help Target
@@ -293,6 +295,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/etud/Bureau/IPSI/distribCaro && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
