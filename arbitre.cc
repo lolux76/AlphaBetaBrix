@@ -50,6 +50,12 @@ void Arbitre::initialisation()
 
     //si le numero de partie est impair, c'est _joueur2 qui commence
     switch (((!(_numero_partie%2))? _player1 : _player2)) {
+        case player::A_1:
+            _joueur2 = std::make_shared<Joueur_AlphaBeta> ("AlphaBeta",false);
+            break;
+        case player::A_2:
+            _joueur2 = std::make_shared<Joueur_AlphaBeta> ("MaxAlphaBeta",false);
+            break;
         case player::M_1:
             _joueur2 = std::make_shared<Joueur_MonteCarlo_> ("MonteCarlo",false);
             break;
