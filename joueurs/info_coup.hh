@@ -37,7 +37,7 @@ private:
 
 public:
     info_coup(Brix const &coup, std::shared_ptr<Jeu> const &jeu, char piece, unsigned int nb_tour);
-    void calcul();
+    double calcul(); //retourne le winrate du coup
     void print(std::string const &fichier);
-    void alignement();
+    void alignement(); 
 };
