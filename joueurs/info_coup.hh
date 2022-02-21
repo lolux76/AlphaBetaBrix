@@ -1,8 +1,12 @@
-#include "brix.hh"
-#include "jeu.hh"
+#include "../brix.hh"
+#include "../jeu.hh"
 #include <memory>
 
-
+struct s_position
+{
+    unsigned int ordonne;
+    unsigned int abcisse;
+};
 
 class info_coup
 {
@@ -18,19 +22,22 @@ private:
     unsigned int _nb_tour;
     double _taux_victoire;
 
+    s_position _pos_j;
+    s_position _pos_a; 
+
     std::shared_ptr<Jeu> _jeu;
+
     Brix _coup;
+
+
     char _piece;
+    char _piece_a;
 
-    bool horsPlateau(unsigned int ordonne, unsigned int absysse) ; 
-
-
+    bool horsPlateau(unsigned int ordonne, unsigned int absysse);
 
 public:
     info_coup(Brix const &coup, std::shared_ptr<Jeu> const &jeu, char piece, unsigned int nb_tour);
-
     void calcul();
-    void print(std::string & const fichier);
+    void print(std::string const &fichier);
     void alignement();
-
 };

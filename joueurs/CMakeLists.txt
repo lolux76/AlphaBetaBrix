@@ -33,7 +33,13 @@ target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 add_executable(data_dump
     data_dump.cc
     info_coup.hh
+    info_coup.cc
     joueur_alphabeta.hh
+    joueur_alphabeta.cc
     ../jeu.hh
     ../brix.hh
+    ../jeu.cc
+    ../brix.cc
+    joueur.hh
+    joueur.cc
 )

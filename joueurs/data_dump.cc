@@ -1,8 +1,10 @@
 #include "info_coup.hh"
-#include "jeu.hh"
 #include <memory>
+#include "../jeu.hh"
 
 int main()
 {
-    std::shared_ptr<Jeu> initial = std::make_shared<Jeu>(Jeu());
+    std::shared_ptr<Jeu> initial = std::make_shared<Jeu>();
+    
+    
 }
