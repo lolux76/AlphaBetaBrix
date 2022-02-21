@@ -29,9 +29,9 @@ info_coup::info_coup(Brix const &coup, std::shared_ptr<Jeu> const &jeu, char pie
 bool info_coup::horsPlateau(unsigned int ordonne, unsigned int absisse)
 {
     if ((ordonne > MAX_HAUTEUR) || (ordonne < 0))
-        return false;
+        return true;
     if ((absisse > MAX_LARGEUR) || (absisse < 0))
-        return false;
+        return true;
 }
 
 void info_coup::calcul()
@@ -46,7 +46,7 @@ void info_coup::alignement()
 
     for (int i = 0; i < 4; i++) // vertical, on lit en dessous
     {
-        if ((horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse)) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] != _piece_a)
+        if ((!horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse)) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] != _piece_a)
         {
             if (_jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] == _piece)
             {
@@ -59,7 +59,7 @@ void info_coup::alignement()
 
     for (int i = 0; i < 4; i++) // horizontal, on lit a gauche
     {
-        if ((horsPlateau(_pos_j.ordonne, _pos_j.abcisse - i)) && _jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse - i] !=_piece_a)
+        if ((!horsPlateau(_pos_j.ordonne, _pos_j.abcisse - i)) && _jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse - i] !=_piece_a)
         {
             if (_jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse - i] == _piece)
             {
@@ -72,7 +72,7 @@ void info_coup::alignement()
 
     for (int i = 0; i < 4; i++) // horizontal, on lit a droite
     {
-        if ((horsPlateau(_pos_j.ordonne, _pos_j.abcisse + i)) && _jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse + i] !=_piece_a)
+        if ((!horsPlateau(_pos_j.ordonne, _pos_j.abcisse + i)) && _jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse + i] !=_piece_a)
         {
             if (_jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse + i] == _piece)
             {
@@ -83,9 +83,9 @@ void info_coup::alignement()
             break;
     }
 
-    for (int i = 0; i < 4; i++) // diagonal descendente et on lit a gauche
+    for (int i = 0; i < 4; i++) // diagonal descendente et on lit a droite
     {
-        if ((horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse + i)) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse + i] !=_piece_a)
+        if ((!horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse + i)) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse + i] !=_piece_a)
         {
             if (_jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse + i] == _piece)
             {
@@ -96,9 +96,9 @@ void info_coup::alignement()
             break;
     }
 
-    for (int i = 0; i < 4; i++) // diagonal descendente et on lit a droite
+    for (int i = 0; i < 4; i++) // diagonal descendente et on lit a gauche
     {
-        if ((horsPlateau(_pos_j.ordonne + i, _pos_j.abcisse - i)) && _jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse - i] !=_piece_a)
+        if ((!horsPlateau(_pos_j.ordonne + i, _pos_j.abcisse - i)) && _jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse - i] !=_piece_a)
         {
             if (_jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse - i] == _piece)
             {
@@ -108,4 +108,26 @@ void info_coup::alignement()
         else
             break;
     }
+
+    
+    for (int i = 0; i < 4; i++) // diagonal montante et on lit a droite
+    {
+        if ((!horsPlateau(_pos_j.ordonne +i, _pos_j.abcisse +i )) && _jeu->plateau()[_pos_j.ordonne +i][_pos_j.abcisse+i]!=_piece_a){
+            if(_jeu->plateau()[_pos_j.ordonne+i][_pos_j.abcisse+i]==_piece){
+                _nb_piece_aligne_joueur[2]++;
+            }
+        }
+        else break;   
+    }
+    
+    for (int i = 0; i < 4; i++) // diagonal montante et on lit a droite
+    {
+        if ((!horsPlateau(_pos_j.ordonne -i, _pos_j.abcisse -i )) && _jeu->plateau()[_pos_j.ordonne -i][_pos_j.abcisse-i]!=_piece_a){
+            if(_jeu->plateau()[_pos_j.ordonne+i][_pos_j.abcisse+i]==_piece){
+                _nb_piece_aligne_joueur[2]++;
+            }
+        }
+        else break;   
+    }
+    
 }
