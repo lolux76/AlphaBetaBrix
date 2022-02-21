@@ -74,18 +74,8 @@ int Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::hi
 {
     // algorithme alpha beta de base
 
-    /***
-     *
-     * TODO
-     * récupérer le coup à jouer
-     * idée : variable meilleur_coup
-     *
-     * Ensuite tester
-     *
-     ***/
-
     // Vérification qu'il nous reste du temps pour jouer
-    if (std::chrono::high_resolution_clock::now() - start > std::chrono::milliseconds(TEMPS_POUR_UN_COUP - 100))
+    if (std::chrono::high_resolution_clock::now() - start > std::chrono::milliseconds(TEMPS_POUR_UN_COUP - 9))
     {
         start -= std::chrono::milliseconds(50000);
         return alphabeta(jeu, alpha, beta, start, profondeur, profondeur, coupAJouer); // On évalue la feuille actuelle car manque de temps pour explorer
@@ -94,12 +84,14 @@ int Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::hi
     // On est sur une feuille
     if (profondeur == profondeur_max)
     {
-        return rand() % 100 + 1;
+        std::cout << std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - start).count() << " microsecondes" << std::endl;
+        return rand() % 200 + 1 - 100;
     }
     // On doit faire un appel récursif pour continuer
     auto coups_valides = std::move(rechercheCoupValide(jeu)); // Liste des coups valides
     bool NoeudMin = false;                                    // Le noeud est-il un noeud min ou max?
     if (profondeur % 2 == 0)
+    
         NoeudMin = true;
 
     int score = 0; // Pour le moment aucun coups n'est joué, donc la valeur actuelle de la partie est nulle
@@ -117,7 +109,7 @@ int Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::hi
             if (alpha <= beta)
             {
                 if (profondeur == 0)
-                    coupAJouer = coups; // C'est le premier coup
+                    coupAJouer = coups; // C'est le premier coup, celui qu'il faudra jouer
                 return score;
             }
         }
@@ -128,7 +120,7 @@ int Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::hi
             if (beta >= score)
             {
                 if (profondeur == 0)
-                    coupAJouer = coups; // C'est le premier coup
+                    coupAJouer = coups; // C'est le premier coup, celui qu'il faudra jouer
                 return score;
             }
         }
@@ -147,7 +139,6 @@ void Joueur_AlphaBeta::recherche_coup(Jeu jeu, Brix &coup)
     int beta = MOINS_INFINI;
     std::cout << "Création coup" << std::endl;
     Brix coupAJouer;
-    std::cout << "test" << std::endl;
     alphabeta(jeu, alpha, beta, start, profondeur_max, profondeur, coupAJouer);
     std::cout << "Coup :" << coupAJouer << std::endl;
     coup.setAllCoord(coupAJouer.getAx(), coupAJouer.getOx(), coupAJouer.getAo(), coupAJouer.getOo());
