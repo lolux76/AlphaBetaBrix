@@ -80,7 +80,7 @@ void info_coup::alignement()
         else break;
     }
 
-    for (int i = 0; i < 4; i++) // diagonal descendente et on lit a gauche
+    for (int i = 0; i < 4; i++) // diagonal descendente et on lit a droite
     {
         if ((horsPlateau(ord_j -i, abs_j +i )) && _jeu->plateau()[ord_j -i][abs_j+i]!=piece_a){
             if(_jeu->plateau()[ord_j-i][abs_j+i]==piece_j){
@@ -90,7 +90,7 @@ void info_coup::alignement()
         else break;   
     }
 
-    for (int i = 0; i < 4; i++) // diagonal descendente et on lit a droite
+    for (int i = 0; i < 4; i++) // diagonal descendente et on lit a gauche
     {
         if ((horsPlateau(ord_j +i, abs_j -i )) && _jeu->plateau()[ord_j +i][abs_j-i]!=piece_a){
             if(_jeu->plateau()[ord_j+i][abs_j-i]==piece_j){
@@ -101,5 +101,34 @@ void info_coup::alignement()
     }
 
     
+    for (int i = 0; i < 4; i++) // diagonal montante et on lit a droite
+    {
+        if ((horsPlateau(ord_j +i, abs_j +i )) && _jeu->plateau()[ord_j +i][abs_j+i]!=piece_a){
+            if(_jeu->plateau()[ord_j+i][abs_j+i]==piece_j){
+                _nb_piece_aligne_joueur[2]++;
+            }
+        }
+        else break;   
+    }
     
+    for (int i = 0; i < 4; i++) // diagonal montante et on lit a gauche
+    {
+        if ((horsPlateau(ord_j -i, abs_j -i )) && _jeu->plateau()[ord_j -i][abs_j-i]!=piece_a){
+            if(_jeu->plateau()[ord_j-i][abs_j-i]==piece_j){
+                _nb_piece_aligne_joueur[2]++;
+            }
+        }
+        else break;   
+    }
+    
+}
+
+int main() {
+    info_coup;
+
+
+
+
+
+    return 0;
 }
