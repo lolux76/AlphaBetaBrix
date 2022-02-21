@@ -1,13 +1,14 @@
 #include "joueur.hh"
 
 Joueur::Joueur(std::string nom, bool joueur)
-    :_nom(nom),_joueur(joueur)
-{}
+    : _nom(nom), _joueur(joueur)
+{
+}
 
-void Joueur::jouer(Jeu jeu, Brix & coup, std::mutex &coup_mutex)
+void Joueur::jouer(Jeu jeu, Brix &coup, std::mutex &coup_mutex)
 {
     coup_mutex.lock();
-    recherche_coup(jeu,coup);
+    recherche_coup(jeu, coup);
     coup_mutex.unlock();
 }
 

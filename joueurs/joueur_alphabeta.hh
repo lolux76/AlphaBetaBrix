@@ -16,7 +16,7 @@ public:
   //char nom_abbrege() const override;
 
   static std::unique_ptr<std::vector<Brix>> rechercheCoupValide(Jeu jeu);
-  int alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::high_resolution_clock::time_point &start, unsigned int &profondeur_max, unsigned int profondeur); //Algorithme alpha beta de base
+  int alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::high_resolution_clock::time_point &start, unsigned int &profondeur_max, unsigned int profondeur, Brix &coupAJouer); //Algorithme alpha beta de base
 
   void recherche_coup(Jeu jeu, Brix &coup) override;
 };
