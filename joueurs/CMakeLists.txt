@@ -43,3 +43,17 @@ add_executable(data_dump
     joueur.hh
     joueur.cc
 )
+
+add_executable(test_coups
+    test.cc
+    info_coup.hh
+    info_coup.cc
+    joueur_alphabeta.hh
+    joueur_alphabeta.cc
+    ../jeu.hh
+    ../brix.hh
+    ../jeu.cc
+    ../brix.cc
+    joueur.hh
+    joueur.cc
+)
