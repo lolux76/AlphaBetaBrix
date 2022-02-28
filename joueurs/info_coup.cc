@@ -3,7 +3,6 @@
 #include <memory>
 #include <fstream>
 #include <ostream>
-O
 
 info_coup::info_coup(Brix const &coup, std::shared_ptr<Jeu> const &jeu, char piece, unsigned int nb_tour) : _nb_piece_aligne_joueur{0, 0, 0}, _nb_piece_aligne_adversaires{0, 0, 0}, _nb_tour(nb_tour), _taux_victoire(0.), _pos_j({0, 0}), _pos_a({0, 0}), _jeu(jeu), _coup(coup), _piece(piece)
 {
@@ -91,18 +90,10 @@ void info_coup::alignement()
     {
         if ((!horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse)) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] != _piece_a)
         {
-            
-            // std::cout << "dans 1er if" << std::endl;
-            // std::cout << "i : " << i << std::endl;
-            // std::cout << "Val plateau" << std::endl;
-            // std::cout << "Pos j ordonne " << _pos_j.ordonne << std::endl;
-            // std::cout << "Pos j abs " << _pos_j.abcisse << std::endl;
-            // std::cout << "val plateau  [_pos_j.ordonne - i][_pos_j.abcisse]" << _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] << std::endl;
 
             if (_jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] == _piece)
             {
                 _nb_piece_aligne_joueur[1]++;
-                std::cout << "dans 2nd if" << std::endl;
             }
         }
 
