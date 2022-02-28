@@ -34,7 +34,7 @@ bool info_coup::horsPlateau(unsigned int ordonne, unsigned int absisse)
     return ((ordonne > MAX_HAUTEUR) || (ordonne < 0)) || ((absisse > MAX_LARGEUR) || (absisse < 0));
 }
 
-double info_coup::calcul()
+double info_coup::print(std::string const &fichier)
 {
     alignement();
     std::shared_ptr<Jeu> jeu_suivant = _jeu;
@@ -43,34 +43,15 @@ double info_coup::calcul()
     // jeu terminé, recherche de vainqueur
     if (jeu_suivant->fini())
     {
-        if (jeu_suivant->partie_O())
+        if ((jeu_suivant->partie_O() && _piece == 'O') || (jeu_suivant->partie_X() && _piece == 'X'))
         {
-            if (_piece == 'O')
-            {
-                _taux_victoire = 1.;
-                return true;
-            }
-            else
-            {
-                _taux_victoire = 0.;
-                return false;
-            }
+            _taux_victoire = 1.;
         }
         else
         {
-            if (_piece == 'X')
-            {
-                _taux_victoire = 1.;
-                return true;
-            }
-            else
-            {
-                _taux_victoire = 0.;
-                return false;
-            }
+            _taux_victoire = 0.;
         }
     }
-
     else
     { // le jeu n'est pas fini
         auto coups = std::move(Joueur_AlphaBeta::rechercheCoupValide(*jeu_suivant));
@@ -78,11 +59,17 @@ double info_coup::calcul()
         for (auto coup : *coups)
         {
             info_coup calc(coup, jeu_suivant, _piece_a, _nb_tour + 1);
-            sum += calc.calcul();
+            sum += calc.print(fichier);
         }
 
-        return (sum / coups->size());
+        _taux_victoire = (sum / coups->size());
     }
+
+    std::cout << *jeu_suivant << std::endl;
+    std::cout << "Taux de victoire : " << _taux_victoire << std::endl;
+
+    afficher_info_coup(fichier);
+    return _taux_victoire;
 }
 
 void info_coup::afficher_info_coup(std::string const &fichier) const
@@ -93,60 +80,6 @@ void info_coup::afficher_info_coup(std::string const &fichier) const
     {
         fl << _nb_tour << ";" << _nb_piece_aligne_joueur[0] << ";" << _nb_piece_aligne_joueur[1] << ";" << _nb_piece_aligne_joueur[2] << ";" << _taux_victoire << std::endl;
         fl.close();
-    }
-}
-
-double info_coup::print(std::string const &fichier)
-{
-    std::cout << *_jeu << std::endl;
-
-    alignement();
-    std::shared_ptr<Jeu> jeu_suivant = _jeu;
-    jeu_suivant->joue(_coup);
-    // jeu terminé, recherche de vainqueur
-    if (jeu_suivant->fini())
-    {
-        if (jeu_suivant->getAlignement_O())
-        {
-            if (_piece == 'O')
-            {
-                _taux_victoire = 1.;
-            }
-            else
-            {
-                _taux_victoire = 0.;
-            }
-        }
-        else
-        {
-            if (_piece == 'X')
-            {
-                _taux_victoire = 1.;
-            }
-            else
-            {
-                _taux_victoire = 0.;
-            }
-        }
-        afficher_info_coup(fichier);
-        return _taux_victoire;
-    }
-
-    else
-    { // le jeu n'est pas fini
-        auto coups = std::move(Joueur_AlphaBeta::rechercheCoupValide(*jeu_suivant));
-        double sum = 0;
-        for (auto coup : *coups)
-        {
-            info_coup calc(coup, jeu_suivant, _piece_a, _nb_tour + 1);
-            sum += (1 - calc.print(fichier));
-        }
-
-        _taux_victoire = (double)(sum / (double)coups->size());
-
-        afficher_info_coup(fichier);
-
-        return _taux_victoire;
     }
 }
 
