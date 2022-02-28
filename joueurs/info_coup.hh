@@ -35,9 +35,11 @@ private:
 
     bool horsPlateau(unsigned int ordonne, unsigned int absysse);
 
+    void afficher_info_coup(std::string const &fichier) const;
+
 public:
     info_coup(Brix const &coup, std::shared_ptr<Jeu> const &jeu, char piece, unsigned int nb_tour);
     double calcul(); //retourne le winrate du coup
-    void print(std::string const &fichier);
+    double print(std::string const &fichier); //retourne le winrate du coup
     void alignement(); 
 };

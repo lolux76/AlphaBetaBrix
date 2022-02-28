@@ -1,6 +1,8 @@
 #include "info_coup.hh"
 #include "joueur_alphabeta.hh"
 #include <memory>
+#include <fstream>
+#include <ostream>
 
 info_coup::info_coup(Brix const &coup, std::shared_ptr<Jeu> const &jeu, char piece, unsigned int nb_tour) : _nb_piece_aligne_joueur{0, 0, 0}, _nb_piece_aligne_adversaires{0, 0, 0}, _nb_tour(nb_tour), _taux_victoire(0.), _pos_j({0, 0}), _pos_a({0, 0}), _jeu(jeu), _coup(coup), _piece(piece)
 {
@@ -38,10 +40,10 @@ double info_coup::calcul()
     std::shared_ptr<Jeu> jeu_suivant = _jeu;
     jeu_suivant->joue(_coup);
 
-    //jeu terminé, recherche de vainqueur
+    // jeu terminé, recherche de vainqueur
     if (jeu_suivant->fini())
     {
-        if (jeu_suivant->getAlignement_O())
+        if (jeu_suivant->partie_O())
         {
             if (_piece == 'O')
             {
@@ -83,6 +85,71 @@ double info_coup::calcul()
     }
 }
 
+void info_coup::afficher_info_coup(std::string const &fichier) const
+{
+    std::ofstream fl;
+    fl.open(fichier, std::ios_base::app);
+    if (fl.is_open())
+    {
+        fl << _nb_tour << ";" << _nb_piece_aligne_joueur[0] << ";" << _nb_piece_aligne_joueur[1] << ";" << _nb_piece_aligne_joueur[2] << ";" << _taux_victoire << std::endl;
+        fl.close();
+    }
+}
+
+double info_coup::print(std::string const &fichier)
+{
+    std::cout << *_jeu << std::endl;
+
+    alignement();
+    std::shared_ptr<Jeu> jeu_suivant = _jeu;
+    jeu_suivant->joue(_coup);
+    // jeu terminé, recherche de vainqueur
+    if (jeu_suivant->fini())
+    {
+        if (jeu_suivant->getAlignement_O())
+        {
+            if (_piece == 'O')
+            {
+                _taux_victoire = 1.;
+            }
+            else
+            {
+                _taux_victoire = 0.;
+            }
+        }
+        else
+        {
+            if (_piece == 'X')
+            {
+                _taux_victoire = 1.;
+            }
+            else
+            {
+                _taux_victoire = 0.;
+            }
+        }
+        afficher_info_coup(fichier);
+        return _taux_victoire;
+    }
+
+    else
+    { // le jeu n'est pas fini
+        auto coups = std::move(Joueur_AlphaBeta::rechercheCoupValide(*jeu_suivant));
+        double sum = 0;
+        for (auto coup : *coups)
+        {
+            info_coup calc(coup, jeu_suivant, _piece_a, _nb_tour + 1);
+            sum += (1 - calc.print(fichier));
+        }
+
+        _taux_victoire = (double)(sum / (double)coups->size());
+
+        afficher_info_coup(fichier);
+
+        return _taux_victoire;
+    }
+}
+
 void info_coup::alignement()
 {
 
@@ -95,8 +162,8 @@ void info_coup::alignement()
                 _nb_piece_aligne_joueur[1]++;
             }
         }
-        else
-            break;
+        // else
+        //     break;
     }
 
     for (int i = 0; i < 4; i++) // horizontal, on lit a gauche
@@ -108,8 +175,8 @@ void info_coup::alignement()
                 _nb_piece_aligne_joueur[0]++;
             }
         }
-        else
-            break;
+        // else
+        //     break;
     }
 
     for (int i = 0; i < 4; i++) // horizontal, on lit a droite
@@ -121,8 +188,8 @@ void info_coup::alignement()
                 _nb_piece_aligne_joueur[0]++;
             }
         }
-        else
-            break;
+        // else
+        //     break;
     }
 
     for (int i = 0; i < 4; i++) // diagonal descendente et on lit a droite
@@ -134,8 +201,8 @@ void info_coup::alignement()
                 _nb_piece_aligne_joueur[2]++;
             }
         }
-        else
-            break;
+        // else
+        //     break;
     }
 
     for (int i = 0; i < 4; i++) // diagonal descendente et on lit a gauche
@@ -147,8 +214,8 @@ void info_coup::alignement()
                 _nb_piece_aligne_joueur[2]++;
             }
         }
-        else
-            break;
+        // else
+        //     break;
     }
 
     for (int i = 0; i < 4; i++) // diagonal montante et on lit a droite
@@ -160,8 +227,8 @@ void info_coup::alignement()
                 _nb_piece_aligne_joueur[2]++;
             }
         }
-        else
-            break;
+        // else
+        //     break;
     }
 
     for (int i = 0; i < 4; i++) // diagonal montante et on lit a droite
@@ -173,7 +240,7 @@ void info_coup::alignement()
                 _nb_piece_aligne_joueur[2]++;
             }
         }
-        else
-            break;
+        // else
+        //     break;
     }
 }
