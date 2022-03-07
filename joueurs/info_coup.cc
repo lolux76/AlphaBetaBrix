@@ -85,97 +85,124 @@ void info_coup::afficher_info_coup(std::string const &fichier) const
 
 void info_coup::alignement()
 {
+// todo : check hors plateau adversaire + enlever else break : fait
+// j'ai retiré tous les else if > remplacé par des if
 
     for (int i = 0; i < 4; i++) // vertical, on lit en dessous
     {
-        if ((!horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse)) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] != _piece_a)
+        if ((!horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse)) || (!horsPlateau(_pos_a.ordonne - i, _pos_a.abcisse)))
         {
 
             if (_jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] == _piece)
             {
                 _nb_piece_aligne_joueur[1]++;
             }
+            if(_jeu->plateau()[_pos_a.ordonne - i][_pos_a.abcisse] == _piece_a){
+                _nb_piece_aligne_adversaires[1]++;
+
+            }
         }
 
-        // else
-        //     break;
+        else
+            break;
     }
 
     for (int i = 0; i < 4; i++) // horizontal, on lit a gauche
     {
-        if ((!horsPlateau(_pos_j.ordonne, _pos_j.abcisse - i)) && _jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse - i] != _piece_a)
+        if ((!horsPlateau(_pos_j.ordonne, _pos_j.abcisse - i)) || (!horsPlateau(_pos_a.ordonne, _pos_a.abcisse -i)))
         {
             if (_jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse - i] == _piece)
             {
                 _nb_piece_aligne_joueur[0]++;
             }
+            if(_jeu->plateau()[_pos_a.ordonne][_pos_a.abcisse -1] == _piece_a){
+                _nb_piece_aligne_adversaires[0]++;
+
+            }
         }
-        // else
-        //     break;
+        else
+            break;
     }
 
     for (int i = 0; i < 4; i++) // horizontal, on lit a droite
     {
-        if ((!horsPlateau(_pos_j.ordonne, _pos_j.abcisse + i)) && _jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse + i] != _piece_a)
+        if ((!horsPlateau(_pos_j.ordonne, _pos_j.abcisse + i)) || (!horsPlateau(_pos_a.ordonne, _pos_a.abcisse +i)))
         {
             if (_jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse + i] == _piece)
             {
                 _nb_piece_aligne_joueur[0]++;
             }
+            if(_jeu->plateau()[_pos_a.ordonne][_pos_a.abcisse + i] == _piece_a){
+                _nb_piece_aligne_adversaires[0]++;
+
+            }
         }
-        // else
-        //     break;
+        else
+            break;
     }
 
     for (int i = 0; i < 4; i++) // diagonal descendente et on lit a droite
     {
-        if ((!horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse + i)) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse + i] != _piece_a)
+        if ((!horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse + i)) || (!horsPlateau(_pos_a.ordonne - i, _pos_a.abcisse +i)))
         {
             if (_jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse + i] == _piece)
             {
                 _nb_piece_aligne_joueur[2]++;
             }
+            if(_jeu->plateau()[_pos_a.ordonne - i][_pos_a.abcisse + i] == _piece_a){
+                _nb_piece_aligne_adversaires[2]++;
+            }
         }
-        // else
-        //     break;
+        else
+            break;
     }
+    // !!!! remplacer le && par || provoque une erreur de ségmentation je comprends pas pourquoi 
 
     for (int i = 0; i < 4; i++) // diagonal descendente et on lit a gauche
     {
-        if ((!horsPlateau(_pos_j.ordonne + i, _pos_j.abcisse - i)) && _jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse - i] != _piece_a)
+        if ((!horsPlateau(_pos_j.ordonne + i, _pos_j.abcisse - i)) && (!horsPlateau(_pos_a.ordonne +i, _pos_a.abcisse -i)))
         {
             if (_jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse - i] == _piece)
             {
                 _nb_piece_aligne_joueur[2]++;
             }
+            if(_jeu->plateau()[_pos_a.ordonne + i][_pos_a.abcisse - i] == _piece_a){
+                _nb_piece_aligne_adversaires[2]++;
+            }
         }
-        // else
-        //     break;
+        else
+            break;
+    }
+
+    for (int i = 0; i < 4; i++) // diagonal montante et on lit a gauche
+    {
+        if ((!horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse - i)) && (!horsPlateau(_pos_a.ordonne - i, _pos_a.abcisse -i)))
+        {
+            if (_jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse - i] == _piece)
+            {
+                _nb_piece_aligne_joueur[2]++;
+            }
+            if(_jeu->plateau()[_pos_a.ordonne - i][_pos_a.abcisse - i] == _piece_a){
+                _nb_piece_aligne_adversaires[2]++;
+            }
+        }
+        else
+            break;
     }
 
     for (int i = 0; i < 4; i++) // diagonal montante et on lit a droite
     {
-        if ((!horsPlateau(_pos_j.ordonne + i, _pos_j.abcisse + i)) && _jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse + i] != _piece_a)
+        if ((!horsPlateau(_pos_j.ordonne + i, _pos_j.abcisse + i)) && (!horsPlateau(_pos_a.ordonne +i, _pos_a.abcisse +i)))
         {
             if (_jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse + i] == _piece)
             {
                 _nb_piece_aligne_joueur[2]++;
             }
-        }
-        // else
-        //     break;
-    }
-
-    for (int i = 0; i < 4; i++) // diagonal montante et on lit a droite
-    {
-        if ((!horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse - i)) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse - i] != _piece_a)
-        {
-            if (_jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse + i] == _piece)
-            {
-                _nb_piece_aligne_joueur[2]++;
+            if(_jeu->plateau()[_pos_a.ordonne + i][_pos_a.abcisse + i] == _piece_a){
+                _nb_piece_aligne_adversaires[2]++;
             }
         }
-        // else
-        //     break;
+        else
+            break;
     }
 }
