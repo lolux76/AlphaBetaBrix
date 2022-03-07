@@ -132,7 +132,7 @@ int Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::hi
 std::bitset<8 * 44 * 2> Joueur_AlphaBeta::initialiserBitset(Jeu jeu)
 {
     std::bitset<8 * 44 * 2> plateauBinaire; // Plateau convertis en binaire, si X -> bit à 10, si O -> bit à 01, sinon bit à 00
-    for (int i = 0; i <= MAX_HAUTEUR - 1; i++)
+    for (int i = MAX_HAUTEUR; i >= 0; i--)
     {
         auto ligne = jeu.plateau()[i];
         unsigned int ligneNumero = 0;

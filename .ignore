@@ -1,0 +1,38 @@
+joueurs/libjoueurs.a
+
+joueurs/CMakeFiles/
+
+joueurs/cmake_install.cmake
+
+joueurs/CMakeCache.txt
+
+joueurs/Makefile
+
+Makefile
+
+CMakeCache
+
+cmake_install.cmake
+
+Arene_light
+
+CMakeCache.txt
+
+CMakeFiles/
+
+.vscode/*
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
+# Support for Project snippet scope
+
+# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
