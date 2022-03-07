@@ -103,6 +103,7 @@ void info_coup::alignement()
     {
         if ((!horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse)) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] != _piece_a)
         {
+<<<<<<< HEAD
 
             // std::cout << "dans 1er if" << std::endl;
             // std::cout << "i : " << i << std::endl;
@@ -110,6 +111,8 @@ void info_coup::alignement()
             // std::cout << "Pos j ordonne " << _pos_j.ordonne << std::endl;
             // std::cout << "Pos j abs " << _pos_j.abcisse << std::endl;
             // std::cout << "val plateau  [_pos_j.ordonne - i][_pos_j.abcisse]" << _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] << std::endl;
+=======
+>>>>>>> d027c23fc2b3ba41fd8de364913209c016f2d86d
 
             if (_jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] == _piece)
             {
