@@ -17,6 +17,8 @@ std::unique_ptr<std::vector<Brix>> Joueur_AlphaBeta::rechercheCoupValide(Jeu jeu
 
     // VARIABLES LOCALES
     std::unique_ptr<std::vector<Brix>> coupValide = std::make_unique<std::vector<Brix>>();
+    std::bitset<8 * 44 * 2> plateauBinaire; // Plateau convertis en binaire, si X -> bit à 10, si O -> bit à 01, sinon bit à 00
+
     Brix b_candidate;
     int tour = jeu.nbCoupJoue() + 1; // la b_candidate devra être valide au tour auquel on va la jouer,i.e. au tour suivant
     // ALGO QUI LISTE LES COUPS POSSIBLES
@@ -33,29 +35,36 @@ std::unique_ptr<std::vector<Brix>> Joueur_AlphaBeta::rechercheCoupValide(Jeu jeu
         if (ordonnee < MAX_HAUTEUR)
         { // On a une case jouable qui est dans les limites du jeu
             // On cherche tous les coups valide à partir de cette case vide
+            int i;
+            unsigned int ligneNumero = 0;
             b_candidate.setAllCoord(abscisse, ordonnee, abscisse, ordonnee + 1); // Brix verticale de bottom 'X'
             if (jeu.coup_licite(b_candidate, tour))                              // Le coup est valide
             {
+                     plateauBinaire[i * (MAX_HAUTEUR - ligneNumero) * 2 * ligneNumero] = 1;
                 coupValide->push_back(b_candidate); // On ajoute notre coup à la liste des coups jouables
             }
 
             b_candidate.setAllCoord(abscisse, ordonnee + 1, abscisse, ordonnee); // Brix verticale de bottom est 'O'
             if (jeu.coup_licite(b_candidate, tour))
             {
+                    plateauBinaire[i * (MAX_HAUTEUR - ligneNumero) * 2 * ligneNumero + 1] = 1;
                 coupValide->push_back(b_candidate);
             }
 
             b_candidate.setAllCoord(abscisse, ordonnee, abscisse + 1, ordonnee); // Brix horizontale commençant par 'X'
             if (jeu.coup_licite(b_candidate, tour))
             {
+                    plateauBinaire[i * (MAX_HAUTEUR - ligneNumero) * 2 * ligneNumero] = 1;
                 coupValide->push_back(b_candidate);
             }
 
             b_candidate.setAllCoord(abscisse + 1, ordonnee, abscisse, ordonnee); // Brix terminant commençant par 'X'
             if (jeu.coup_licite(b_candidate, tour))
             {
+                    plateauBinaire[i * (MAX_HAUTEUR - ligneNumero) * 2 * ligneNumero + 1] = 1;
                 coupValide->push_back(b_candidate);
             }
+            i++;
         }
         // Fin des Brix valides à cette abscisse et cette ordonnee, on passe à l'abscisse suivante
     }
