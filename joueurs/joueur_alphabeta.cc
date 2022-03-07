@@ -91,7 +91,7 @@ int Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::hi
     auto coups_valides = std::move(rechercheCoupValide(jeu)); // Liste des coups valides
     bool NoeudMin = false;                                    // Le noeud est-il un noeud min ou max?
     if (profondeur % 2 == 0)
-    
+
         NoeudMin = true;
 
     int score = 0; // Pour le moment aucun coups n'est joué, donc la valeur actuelle de la partie est nulle
@@ -129,6 +129,35 @@ int Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::hi
     return score;
 }
 
+std::bitset<8 * 44 * 2> Joueur_AlphaBeta::initialiserBitset(Jeu jeu)
+{
+    std::bitset<8 * 44 * 2> plateauBinaire; // Plateau convertis en binaire, si X -> bit à 10, si O -> bit à 01, sinon bit à 00
+    for (int i = 0; i <= MAX_HAUTEUR - 1; i++)
+    {
+        auto ligne = jeu.plateau()[i];
+        unsigned int ligneNumero = 0;
+        for (auto colonne : ligne)
+        {
+            if (colonne == 'o'){
+                plateauBinaire[i * (MAX_HAUTEUR - ligneNumero) * 2 * ligneNumero + 1] = 1;
+                std::cout << "01";
+            }
+            else if (colonne == 'x')
+            {
+                plateauBinaire[i * (MAX_HAUTEUR - ligneNumero) * 2 * ligneNumero] = 1;
+                std::cout << "10";
+            }
+            else{
+                std::cout << " | ";
+            }
+            ligneNumero++;
+        }
+        std::cout << std::endl;
+    }
+
+    return plateauBinaire;
+}
+
 void Joueur_AlphaBeta::recherche_coup(Jeu jeu, Brix &coup)
 {
     std::cout << "Entrée dans recherche" << std::endl;
@@ -137,7 +166,8 @@ void Joueur_AlphaBeta::recherche_coup(Jeu jeu, Brix &coup)
     unsigned int profondeur = 0;
     int alpha = PLUS_INFINI;
     int beta = MOINS_INFINI;
-    std::cout << "Création coup" << std::endl;
+    auto plateauBinaire = initialiserBitset(jeu);
+    std::cout << plateauBinaire << std::endl;
     Brix coupAJouer;
     alphabeta(jeu, alpha, beta, start, profondeur_max, profondeur, coupAJouer);
     std::cout << "Coup :" << coupAJouer << std::endl;

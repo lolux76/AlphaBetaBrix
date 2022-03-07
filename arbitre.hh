@@ -14,8 +14,8 @@
 #include "joueurs/joueur_manuel.hh"
 #include "joueurs/joueur_montecarlo_.hh"
 #include "joueurs/joueur_alphabeta.hh"
-const int TEMPS_POUR_UN_COUP(10);
-//const int TEMPS_POUR_UN_COUP(15000); // millisecondes
+//const int TEMPS_POUR_UN_COUP(10);
+const int TEMPS_POUR_UN_COUP(15000); // millisecondes
 //const int TEMPS_POUR_UN_COUP(10);//millisecondes -- temps lors de la compétition
 /**********************************************************************************
  *             classe lançant la partie et qui se sert des                        *

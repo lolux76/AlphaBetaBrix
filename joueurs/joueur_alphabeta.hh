@@ -5,6 +5,7 @@
 #include "../arbitre.hh"
 #include <memory>
 #include <chrono>
+#include <bits/stdc++.h>
 
 #define PLUS_INFINI std::numeric_limits<int>::max()  //+ infini, NE JAMAIS FAIRE PLUS_INFINI + QQCHOSE (dépassement de bits)
 #define MOINS_INFINI std::numeric_limits<int>::min() //- infini, NE JAMAIS FAIRE MOINS_INFINI - QQCHOSE (dépassement de bits)
@@ -17,6 +18,7 @@ public:
 
   static std::unique_ptr<std::vector<Brix>> rechercheCoupValide(Jeu jeu);
   int alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::high_resolution_clock::time_point &start, unsigned int &profondeur_max, unsigned int profondeur, Brix &coupAJouer); //Algorithme alpha beta de base
+  std::bitset<8*44*2> initialiserBitset(Jeu jeu);
 
   void recherche_coup(Jeu jeu, Brix &coup) override;
 };
