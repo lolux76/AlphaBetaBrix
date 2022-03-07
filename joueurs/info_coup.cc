@@ -72,13 +72,15 @@ double info_coup::print(std::string const &fichier)
     return _taux_victoire;
 }
 
+
+//FORMAT : nb tour ; piece_alignees_j horizontalement, piece_alignees_j verticalement, piece_alignees_j diagonalement, piece_alignees_a horizontalement, piece_alignees_a verticalement, piece_alignees_a diagonalement, pos_j ABS, pos_j ORD, pos_a ABS, pos_a ORD, taux_victoire
 void info_coup::afficher_info_coup(std::string const &fichier) const
 {
     std::ofstream fl;
     fl.open(fichier, std::ios_base::app);
     if (fl.is_open())
     {
-        fl << _nb_tour << ";" << _nb_piece_aligne_joueur[0] << ";" << _nb_piece_aligne_joueur[1] << ";" << _nb_piece_aligne_joueur[2] << ";" << _taux_victoire << std::endl;
+        fl << _nb_tour << ";" << _nb_piece_aligne_joueur[0] << ";" << _nb_piece_aligne_joueur[1] << ";" << _nb_piece_aligne_joueur[2] << ";" << _nb_piece_aligne_adversaires[0] << ";" << _nb_piece_aligne_adversaires[1] << ";" << _nb_piece_aligne_adversaires[2] << ";" << _pos_j.abcisse << ";" <<_pos_j.ordonne << ";" <<_pos_a.abcisse << ";" <<_pos_j.ordonne << ";" << _taux_victoire << std::endl;
         fl.close();
     }
 }
