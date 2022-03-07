@@ -82,150 +82,114 @@ double info_coup::print(std::string const &fichier)
     return _taux_victoire;
 }
 
-
-//FORMAT : nb tour ; piece_alignees_j horizontalement, piece_alignees_j verticalement, piece_alignees_j diagonalement, piece_alignees_a horizontalement, piece_alignees_a verticalement, piece_alignees_a diagonalement, pos_j ABS, pos_j ORD, pos_a ABS, pos_a ORD, taux_victoire
 void info_coup::afficher_info_coup(std::string const &fichier) const
 {
     if (_taux_victoire != 0.5)
     {
-        fl << _nb_tour << ";" << _nb_piece_aligne_joueur[0] << ";" << _nb_piece_aligne_joueur[1] << ";" << _nb_piece_aligne_joueur[2] << ";" << _nb_piece_aligne_adversaires[0] << ";" << _nb_piece_aligne_adversaires[1] << ";" << _nb_piece_aligne_adversaires[2] << ";" << _pos_j.abcisse << ";" <<_pos_j.ordonne << ";" <<_pos_a.abcisse << ";" <<_pos_j.ordonne << ";" << _taux_victoire << std::endl;
-        fl.close();
+        std::ofstream fl;
+        fl.open(fichier, std::ios_base::app);
+        if (fl.is_open())
+        {
+            fl << _nb_tour << ";" << _nb_piece_aligne_joueur[0] << ";" << _nb_piece_aligne_joueur[1] << ";" << _nb_piece_aligne_joueur[2] << ";" << _taux_victoire << std::endl;
+            fl.close();
+        }
     }
 }
 
 void info_coup::alignement()
 {
-    // todo : check hors plateau adversaire + enlever else break : fait
-    // j'ai retiré tous les else if > remplacé par des if
 
-    bool align_j[7] = {true, true, true, true, true, true, true}; // vertical, horizontal G,D, Diag HG, HD, BG, BD
-    bool align_a[7] = {true, true, true, true, true, true, true}; // vertical, horizontal G,D, Diag HG, HD, BG, BD
-
-
-    for (int i = 1; i < 5; i++)
+    for (int i = 0; i < 4; i++) // vertical, on lit en dessous
     {
-        // vertical
-        if (align_j[0] && !horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] == _piece)
+        if ((!horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse)) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] != _piece_a)
         {
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-            // std::cout << "dans 1er if" << std::endl;
-            // std::cout << "i : " << i << std::endl;
-            // std::cout << "Val plateau" << std::endl;
-            // std::cout << "Pos j ordonne " << _pos_j.ordonne << std::endl;
-            // std::cout << "Pos j abs " << _pos_j.abcisse << std::endl;
-            // std::cout << "val plateau  [_pos_j.ordonne - i][_pos_j.abcisse]" << _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] << std::endl;
-=======
->>>>>>> d027c23fc2b3ba41fd8de364913209c016f2d86d
 
             if (_jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] == _piece)
             {
                 _nb_piece_aligne_joueur[1]++;
             }
-=======
-            _nb_piece_aligne_joueur[1]++;
->>>>>>> testcoups
         }
-        else
-            align_j[0] = false;
 
-        if (align_a[0] && !horsPlateau(_pos_a.ordonne - i, _pos_a.abcisse) && _jeu->plateau()[_pos_a.ordonne - i][_pos_a.abcisse] == _piece_a)
-        {
-            _nb_piece_aligne_adversaires[1]++;
-        }
-        else
-            align_a[0] = false;
+        // else
+        //     break;
+    }
 
-        // horizontal G
-        if (align_j[1] && !horsPlateau(_pos_j.ordonne, _pos_j.abcisse - i) && _jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse - i] == _piece)
+    for (int i = 0; i < 4; i++) // horizontal, on lit a gauche
+    {
+        if ((!horsPlateau(_pos_j.ordonne, _pos_j.abcisse - i)) && _jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse - i] != _piece_a)
         {
-            _nb_piece_aligne_joueur[0]++;
+            if (_jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse - i] == _piece)
+            {
+                _nb_piece_aligne_joueur[0]++;
+            }
         }
-        else
-            align_j[1] = false;
+        // else
+        //     break;
+    }
 
-        if (align_a[1] && !horsPlateau(_pos_a.ordonne, _pos_a.abcisse - i) && _jeu->plateau()[_pos_a.ordonne][_pos_a.abcisse - i] == _piece_a)
+    for (int i = 0; i < 4; i++) // horizontal, on lit a droite
+    {
+        if ((!horsPlateau(_pos_j.ordonne, _pos_j.abcisse + i)) && _jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse + i] != _piece_a)
         {
-            _nb_piece_aligne_adversaires[0]++;
+            if (_jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse + i] == _piece)
+            {
+                _nb_piece_aligne_joueur[0]++;
+            }
         }
-        else
-            align_a[1] = false;
+        // else
+        //     break;
+    }
 
-        // horizontal D
-        if (align_j[2] && !horsPlateau(_pos_j.ordonne, _pos_j.abcisse + i) && _jeu->plateau()[_pos_j.ordonne][_pos_j.abcisse + i] == _piece)
+    for (int i = 0; i < 4; i++) // diagonal descendente et on lit a droite
+    {
+        if ((!horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse + i)) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse + i] != _piece_a)
         {
-            _nb_piece_aligne_joueur[0]++;
+            if (_jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse + i] == _piece)
+            {
+                _nb_piece_aligne_joueur[2]++;
+            }
         }
-        else
-            align_j[2] = false;
+        // else
+        //     break;
+    }
 
-        if (align_a[2] && !horsPlateau(_pos_a.ordonne, _pos_a.abcisse + i) && _jeu->plateau()[_pos_a.ordonne][_pos_a.abcisse + i] == _piece_a)
+    for (int i = 0; i < 4; i++) // diagonal descendente et on lit a gauche
+    {
+        if ((!horsPlateau(_pos_j.ordonne + i, _pos_j.abcisse - i)) && _jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse - i] != _piece_a)
         {
-            _nb_piece_aligne_adversaires[0]++;
+            if (_jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse - i] == _piece)
+            {
+                _nb_piece_aligne_joueur[2]++;
+            }
         }
-        else
-            align_a[2] = false;
+        // else
+        //     break;
+    }
 
-        // diagonale HG
-        if (align_j[3] && !horsPlateau(_pos_j.ordonne + i, _pos_j.abcisse - i) && _jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse - i] == _piece)
+    for (int i = 0; i < 4; i++) // diagonal montante et on lit a droite
+    {
+        if ((!horsPlateau(_pos_j.ordonne + i, _pos_j.abcisse + i)) && _jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse + i] != _piece_a)
         {
-            _nb_piece_aligne_joueur[3]++;
+            if (_jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse + i] == _piece)
+            {
+                _nb_piece_aligne_joueur[2]++;
+            }
         }
-        else
-            align_j[3] = false;
+        // else
+        //     break;
+    }
 
-        if (align_a[3] && !horsPlateau(_pos_j.ordonne + i, _pos_j.abcisse - i) && _jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse - i] == _piece_a)
+    for (int i = 0; i < 4; i++) // diagonal montante et on lit a droite
+    {
+        if ((!horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse - i)) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse - i] != _piece_a)
         {
-            _nb_piece_aligne_adversaires[3]++;
+            if (_jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse + i] == _piece)
+            {
+                _nb_piece_aligne_joueur[2]++;
+            }
         }
-        else
-            align_a[3] = false;
-
-        // diagonale HD
-        if (align_j[4] && !horsPlateau(_pos_j.ordonne + i, _pos_j.abcisse + i) && _jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse + i] == _piece)
-        {
-            _nb_piece_aligne_joueur[3]++;
-        }
-        else
-            align_j[4] = false;
-
-        if (align_a[4] && !horsPlateau(_pos_j.ordonne + i, _pos_j.abcisse + i) && _jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse + i] == _piece_a)
-        {
-            _nb_piece_aligne_adversaires[3]++;
-        }
-        else
-            align_a[4] = false;
-
-        // diagonale BG
-        if (align_j[5] && !horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse - i) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse - i] == _piece)
-        {
-            _nb_piece_aligne_joueur[3]++;
-        }
-        else
-            align_j[5] = false;
-
-        if (align_a[5] && !horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse - i) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse - i] == _piece_a)
-        {
-            _nb_piece_aligne_adversaires[3]++;
-        }
-        else
-            align_a[5] = false;
-
-        // diagonale BD
-        if (align_j[6] && !horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse + i) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse + i] == _piece)
-        {
-            _nb_piece_aligne_joueur[3]++;
-        }
-        else
-            align_j[6] = false;
-
-        if (align_a[6] && !horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse + i) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse + i] == _piece_a)
-        {
-            _nb_piece_aligne_adversaires[3]++;
-        }
-        else
-            align_a[6] = false;
+        // else
+        //     break;
     }
 }
 
