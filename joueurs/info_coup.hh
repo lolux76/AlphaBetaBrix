@@ -56,7 +56,8 @@ public:
     }
 
     info_coup(Brix const &coup, std::shared_ptr<Jeu> const &jeu, char piece, unsigned int nb_tour);
-    double calcul();                          // retourne le winrate du coup
     double print(std::string const &fichier); // retourne le winrate du coup
     void alignement();
+
+    std::shared_ptr<info_coup> clone() const;
 };

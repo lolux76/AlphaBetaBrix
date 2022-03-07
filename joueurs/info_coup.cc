@@ -3,7 +3,6 @@
 #include <memory>
 #include <fstream>
 #include <ostream>
-O
 
 info_coup::info_coup(Brix const &coup, std::shared_ptr<Jeu> const &jeu, char piece, unsigned int nb_tour) : _nb_piece_aligne_joueur{0, 0, 0}, _nb_piece_aligne_adversaires{0, 0, 0}, _nb_tour(nb_tour), _taux_victoire(0.), _pos_j({0, 0}), _pos_a({0, 0}), _jeu(jeu), _coup(coup), _piece(piece)
 {
@@ -38,19 +37,30 @@ bool info_coup::horsPlateau(unsigned int ordonne, unsigned int absisse)
 double info_coup::print(std::string const &fichier)
 {
     alignement();
-    std::shared_ptr<Jeu> jeu_suivant = _jeu;
+    std::shared_ptr<Jeu> jeu_suivant = std::make_shared<Jeu>(*_jeu);
     jeu_suivant->joue(_coup);
 
     // jeu terminé, recherche de vainqueur
     if (jeu_suivant->fini())
     {
+        // std::cout << "jeu fini" << std::endl;
+        // std::cout << jeu_suivant->partie_O() << std::endl;
+        // std::cout << jeu_suivant->partie_X() << std::endl;
+        // std::cout << jeu_suivant->nbCoupJoue();
+
         if ((jeu_suivant->partie_O() && _piece == 'o') || (jeu_suivant->partie_X() && _piece == 'x'))
         {
-            _taux_victoire = 1.;
+            std::cout << "partie gagnée :D" << std::endl;
+            _taux_victoire = 1.0;
+        }
+        else if (jeu_suivant->partie_nulle())
+        {
+            _taux_victoire = 0.5;
         }
         else
         {
-            _taux_victoire = 0.;
+            std::cout << "partie perdue :(" << std::endl;
+            return 0.0;
         }
     }
     else
@@ -66,8 +76,7 @@ double info_coup::print(std::string const &fichier)
         _taux_victoire = (sum / coups->size());
     }
 
-    std::cout << *jeu_suivant << std::endl;
-    std::cout << "Taux de victoire : " << _taux_victoire << std::endl;
+    // std::cout << "Taux de victoire : " << _taux_victoire << std::endl;
 
     afficher_info_coup(fichier);
     return _taux_victoire;
@@ -75,12 +84,15 @@ double info_coup::print(std::string const &fichier)
 
 void info_coup::afficher_info_coup(std::string const &fichier) const
 {
-    std::ofstream fl;
-    fl.open(fichier, std::ios_base::app);
-    if (fl.is_open())
+    if (_taux_victoire != 0.5)
     {
-        fl << _nb_tour << ";" << _nb_piece_aligne_joueur[0] << ";" << _nb_piece_aligne_joueur[1] << ";" << _nb_piece_aligne_joueur[2] << ";" << _taux_victoire << std::endl;
-        fl.close();
+        std::ofstream fl;
+        fl.open(fichier, std::ios_base::app);
+        if (fl.is_open())
+        {
+            fl << _nb_tour << ";" << _nb_piece_aligne_joueur[0] << ";" << _nb_piece_aligne_joueur[1] << ";" << _nb_piece_aligne_joueur[2] << ";" << _taux_victoire << std::endl;
+            fl.close();
+        }
     }
 }
 
@@ -91,7 +103,7 @@ void info_coup::alignement()
     {
         if ((!horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse)) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] != _piece_a)
         {
-            
+
             // std::cout << "dans 1er if" << std::endl;
             // std::cout << "i : " << i << std::endl;
             // std::cout << "Val plateau" << std::endl;
@@ -102,7 +114,6 @@ void info_coup::alignement()
             if (_jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse] == _piece)
             {
                 _nb_piece_aligne_joueur[1]++;
-                std::cout << "dans 2nd if" << std::endl;
             }
         }
 
@@ -187,4 +198,9 @@ void info_coup::alignement()
         // else
         //     break;
     }
+}
+
+std::shared_ptr<info_coup> info_coup::clone() const
+{
+    return std::make_shared<info_coup>(_coup, std::make_shared<Jeu>(*_jeu), _piece, _nb_tour);
 }

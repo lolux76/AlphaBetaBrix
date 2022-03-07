@@ -7,12 +7,11 @@
 int main()
 {
     std::shared_ptr<Jeu> initial = std::make_shared<Jeu>();
-
+    initial->reset();
     auto coups = std::move(Joueur_AlphaBeta::rechercheCoupValide(*initial));
-    std::cout << "Taille du tableau : " << coups->size() << std::endl;
     for (auto coup : *coups)
     {
-        info_coup c(coup, initial, 'O', 0);
+        info_coup c(coup, initial, 'x', 0);
         c.print("fichier_infos.csv");
     }
 }
