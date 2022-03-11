@@ -5,6 +5,7 @@
 #include "../arbitre.hh"
 #include <memory>
 #include <chrono>
+#include "info_coup.hh"
 
 #define PLUS_INFINI std::numeric_limits<int>::max()  //+ infini, NE JAMAIS FAIRE PLUS_INFINI + QQCHOSE (dépassement de bits)
 #define MOINS_INFINI std::numeric_limits<int>::min() //- infini, NE JAMAIS FAIRE MOINS_INFINI - QQCHOSE (dépassement de bits)

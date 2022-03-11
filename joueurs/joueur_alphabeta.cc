@@ -94,7 +94,9 @@ int Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::hi
     // On est sur une feuille
     if (profondeur == profondeur_max)
     {
-        return rand() % 100 + 1;
+        auto jeuPointeur = std::make_shared<Jeu>(jeu);
+        info_coup scoreCoup(coupAJouer, jeuPointeur, joueur ? 'o' : 'x', 0);
+        return scoreCoup.eval();
     }
     // On doit faire un appel récursif pour continuer
     auto coups_valides = std::move(rechercheCoupValide(jeu)); // Liste des coups valides
@@ -118,6 +120,9 @@ int Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::hi
             {
                 if (profondeur == 0)
                     coupAJouer = coups; // C'est le premier coup
+                    auto jeuPointeur = std::make_shared<Jeu>(jeuBis);
+                    info_coup scoreCoup(coupAJouer, jeuPointeur, this->joueur() ? 'o' : 'x', 0);
+                    score = scoreCoup.eval();
                 return score;
             }
         }
@@ -129,6 +134,9 @@ int Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::hi
             {
                 if (profondeur == 0)
                     coupAJouer = coups; // C'est le premier coup
+                    auto jeuPointeur = std::make_shared<Jeu>(jeuBis);
+                    info_coup scoreCoup(coupAJouer, jeuPointeur, joueur ? 'o' : 'x', 0);
+                    score = scoreCoup.eval();
                 return score;
             }
         }
