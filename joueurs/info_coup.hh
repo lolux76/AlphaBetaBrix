@@ -4,22 +4,22 @@
 #include <vector>
 struct s_position
 {
-    unsigned int ordonne;
-    unsigned int abcisse;
+    unsigned short ordonne;
+    unsigned short abcisse;
 };
 
 class info_coup
 {
 private:
-    unsigned int _nb_piece_aligne_joueur[3];
+    unsigned short _nb_piece_aligne_joueur[3];
     // 0 : ligne
     // 1 : colonne
     // 2 : diagonale
-    unsigned int _nb_piece_aligne_adversaires[3];
+    unsigned short _nb_piece_aligne_adversaires[3];
     // 0 : ligne
     // 1 : colonne
     // 2 : diagonale
-    unsigned int _nb_tour;
+    unsigned short _nb_tour;
     double _taux_victoire;
 
     s_position _pos_j;
@@ -58,6 +58,8 @@ public:
     info_coup(Brix const &coup, std::shared_ptr<Jeu> const &jeu, char piece, unsigned int nb_tour);
     double print(std::string const &fichier); // retourne le winrate du coup
     void alignement();
+
+    int eval();
 
     std::shared_ptr<info_coup> clone() const;
 };

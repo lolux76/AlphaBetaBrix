@@ -3,6 +3,7 @@
 #include <memory>
 #include <fstream>
 #include <ostream>
+#include <cmath>
 
 info_coup::info_coup(Brix const &coup, std::shared_ptr<Jeu> const &jeu, char piece, unsigned int nb_tour) : _nb_piece_aligne_joueur{0, 0, 0}, _nb_piece_aligne_adversaires{0, 0, 0}, _nb_tour(nb_tour), _taux_victoire(0.), _pos_j({0, 0}), _pos_a({0, 0}), _jeu(jeu), _coup(coup), _piece(piece)
 {
@@ -55,8 +56,8 @@ double info_coup::print(std::string const &fichier)
         }
         else if (jeu_suivant->partie_nulle())
         {
-            _taux_victoire = 0.5;
-            return 0.5;
+            _taux_victoire = -1.0;
+            return -1;
         }
         else
         {
@@ -68,13 +69,21 @@ double info_coup::print(std::string const &fichier)
     { // le jeu n'est pas fini
         auto coups = std::move(Joueur_AlphaBeta::rechercheCoupValide(*jeu_suivant));
         double sum = 0;
+        int size = 0;
         for (auto coup : *coups)
         {
             info_coup calc(coup, jeu_suivant, _piece_a, _nb_tour + 1);
-            sum += calc.print(fichier);
+            double res = calc.print(fichier);
+            if (res == -1)
+            {
+                continue;
+            }
+
+            sum += res;
+            size++;
         }
 
-        _taux_victoire = 1.0 - (sum / coups->size()); // on prend l'inverse, car le coup d'après joue pour l'adversaire !
+        _taux_victoire = size == 0 ? -1 : 1.0 - (sum / size); // on prend l'inverse, car le coup d'après joue pour l'adversaire !
     }
 
     // std::cout << "Taux de victoire : " << _taux_victoire << std::endl;
@@ -86,14 +95,14 @@ double info_coup::print(std::string const &fichier)
 // FORMAT : nb tour ; piece_alignees_j horizontalement, piece_alignees_j verticalement, piece_alignees_j diagonalement, piece_alignees_a horizontalement, piece_alignees_a verticalement, piece_alignees_a diagonalement, pos_j ABS, pos_j ORD, pos_a ABS, pos_a ORD, taux_victoire
 void info_coup::afficher_info_coup(std::string const &fichier) const
 {
-    //filtre les parties qui mènent inexorablement à une égalité
-    if (_taux_victoire != 0.5)
+    // filtre les parties qui mènent inexorablement à une égalité
+    if (_taux_victoire != -1)
     {
         std::ofstream fl;
         fl.open(fichier, std::ios_base::app);
         if (fl.is_open())
         {
-            fl << _nb_tour << ";" << _nb_piece_aligne_joueur[0] << ";" << _nb_piece_aligne_joueur[1] << ";" << _nb_piece_aligne_joueur[2] << ";" << _nb_piece_aligne_adversaires[0] << ";" << _nb_piece_aligne_adversaires[1] << ";" << _nb_piece_aligne_adversaires[2] << ";" << _pos_j.abcisse << ";" << _pos_j.abcisse << ";" << _pos_a.abcisse << ";" << _pos_j.ordonne << ";" << _taux_victoire << std::endl;
+            fl << _nb_tour << ";" << _nb_piece_aligne_joueur[0] << ";" << _nb_piece_aligne_joueur[1] << ";" << _nb_piece_aligne_joueur[2] << ";" << _nb_piece_aligne_adversaires[0] << ";" << _nb_piece_aligne_adversaires[1] << ";" << _nb_piece_aligne_adversaires[2] << ";" << _pos_j.abcisse << ";" << _pos_j.ordonne << ";" << _pos_a.abcisse << ";" << _pos_a.ordonne << ";" << _taux_victoire << std::endl;
             fl.close();
         }
     }
@@ -214,4 +223,27 @@ void info_coup::alignement()
         else
             align_a[6] = false;
     }
+}
+int info_coup::eval()
+{
+    alignement();
+
+    return (
+               1 + (_nb_piece_aligne_joueur[0] + _nb_piece_aligne_joueur[1] + _nb_piece_aligne_joueur[2])
+
+               -
+
+               (_nb_piece_aligne_adversaires[0] + _nb_piece_aligne_adversaires[1] + _nb_piece_aligne_adversaires[2])
+
+                   )
+
+           *
+
+           (5 - std::abs(4 - _pos_j.abcisse)) // favorise les coups au centre
+
+           *
+
+           (1 + ((20 - _pos_j.ordonne) / 4)) // favorise les coups en bas
+
+        ;
 }
