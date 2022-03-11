@@ -138,7 +138,7 @@ int Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::hi
     return score;
 }
 
-std::bitset<8 * 44 * 2> Joueur_AlphaBeta::initialiserBitset(Jeu jeu)
+/*std::bitset<8 * 44 * 2> Joueur_AlphaBeta::initialiserBitset(Jeu jeu)
 {
     std::bitset<8 * 44 * 2> plateauBinaire; // Plateau convertis en binaire, si X -> bit à 10, si O -> bit à 01, sinon bit à 00
     for (int i = MAX_HAUTEUR; i >= 0; i--)
@@ -165,7 +165,7 @@ std::bitset<8 * 44 * 2> Joueur_AlphaBeta::initialiserBitset(Jeu jeu)
     }
 
     return plateauBinaire;
-}
+}*/
 
 void Joueur_AlphaBeta::recherche_coup(Jeu jeu, Brix &coup)
 {
@@ -175,8 +175,8 @@ void Joueur_AlphaBeta::recherche_coup(Jeu jeu, Brix &coup)
     unsigned int profondeur = 0;
     int alpha = PLUS_INFINI;
     int beta = MOINS_INFINI;
-    auto plateauBinaire = initialiserBitset(jeu);
-    std::cout << plateauBinaire << std::endl;
+    //auto plateauBinaire = initialiserBitset(jeu);
+    //std::cout << plateauBinaire << std::endl;
     Brix coupAJouer;
     alphabeta(jeu, alpha, beta, start, profondeur_max, profondeur, coupAJouer);
     std::cout << "Coup :" << coupAJouer << std::endl;
