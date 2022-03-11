@@ -29,3 +29,31 @@ set(HEADERS
 
 add_library(joueurs ${SRCS} ${HEADERS})
 target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
+
+add_executable(data_dump
+    data_dump.cc
+    info_coup.hh
+    info_coup.cc
+    joueur_alphabeta.hh
+    joueur_alphabeta.cc
+    ../jeu.hh
+    ../brix.hh
+    ../jeu.cc
+    ../brix.cc
+    joueur.hh
+    joueur.cc
+)
+
+add_executable(test_coups
+    test.cc
+    info_coup.hh
+    info_coup.cc
+    joueur_alphabeta.hh
+    joueur_alphabeta.cc
+    ../jeu.hh
+    ../brix.hh
+    ../jeu.cc
+    ../brix.cc
+    joueur.hh
+    joueur.cc
+)
