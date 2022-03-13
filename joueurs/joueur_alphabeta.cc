@@ -70,7 +70,7 @@ std::unique_ptr<std::vector<Brix>> Joueur_AlphaBeta::rechercheCoupValide(Jeu jeu
     return coupValide;
 }
 
-int Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::high_resolution_clock::time_point &start, unsigned int &profondeur_max, unsigned int profondeur, Brix &coupAJouer)
+coup_select Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::high_resolution_clock::time_point &start, unsigned int &profondeur_max, unsigned int profondeur, Brix &coupAJouer)
 {
     // algorithme alpha beta de base
 
@@ -95,8 +95,8 @@ int Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::hi
     if (profondeur == profondeur_max)
     {
         auto jeuPointeur = std::make_shared<Jeu>(jeu);
-        info_coup scoreCoup(coupAJouer, jeuPointeur, joueur ? 'o' : 'x', 0);
-        return scoreCoup.eval();
+        info_coup scoreCoup(coupAJouer, jeuPointeur, (this->joueur() ? 'o' : 'x'), 0);
+        return {coupAJouer,scoreCoup.eval()}; // coup_select(coup, score);
     }
     // On doit faire un appel récursif pour continuer
     auto coups_valides = std::move(rechercheCoupValide(jeu)); // Liste des coups valides
@@ -104,45 +104,47 @@ int Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::hi
     if (profondeur % 2 == 0)
         NoeudMin = true;
 
-    int score = 0; // Pour le moment aucun coups n'est joué, donc la valeur actuelle de la partie est nulle
-
+    coup_select select; // Pour le moment aucun coups n'est joué, donc la valeur actuelle de la partie est nulle
+    select.score = 0;
     // Pour chaque coup possible, on explore l'arbre
     for (auto coups : *coups_valides)
     {
         Jeu jeuBis = jeu;
         jeuBis.joue(coups);
-        score = alphabeta(jeuBis, alpha, beta, start, profondeur_max, profondeur + 1, coupAJouer);
+        auto jeuPointeur = std::make_shared<Jeu>(jeuBis);
+
+        select = alphabeta(jeuBis, alpha, beta, start, profondeur_max, profondeur + 1, coupAJouer);
         if (NoeudMin)
         {
-            if (alpha > score)
-                alpha = score;
+            if (alpha > select.score)
+                alpha = select.score;
             if (alpha <= beta)
             {
                 if (profondeur == 0)
                     coupAJouer = coups; // C'est le premier coup
-                    auto jeuPointeur = std::make_shared<Jeu>(jeuBis);
-                    info_coup scoreCoup(coupAJouer, jeuPointeur, this->joueur() ? 'o' : 'x', 0);
-                    score = scoreCoup.eval();
-                return score;
+                info_coup scoreCoup(coupAJouer, jeuPointeur, this->joueur() ? 'o' : 'x', 0);
+                select.coup = coupAJouer;
+                select.score = scoreCoup.eval();
+                return select;
             }
         }
         else
         {
-            if (beta < score)
-                beta = score;
-            if (beta >= score)
+            if (beta < select.score)
+                beta = select.score;
+            if (beta >= select.score)
             {
                 if (profondeur == 0)
                     coupAJouer = coups; // C'est le premier coup
-                    auto jeuPointeur = std::make_shared<Jeu>(jeuBis);
-                    info_coup scoreCoup(coupAJouer, jeuPointeur, joueur ? 'o' : 'x', 0);
-                    score = scoreCoup.eval();
-                return score;
+                info_coup scoreCoup(coupAJouer, jeuPointeur, (this->joueur() ? 'o' : 'x'), 0);
+                select.coup = coupAJouer;
+                select.score = scoreCoup.eval();
+                return select;
             }
         }
     }
     // TODO:
-    return score;
+    return select;
 }
 
 void Joueur_AlphaBeta::recherche_coup(Jeu jeu, Brix &coup)

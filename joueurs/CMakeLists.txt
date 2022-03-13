@@ -17,6 +17,7 @@ set(SRCS
     joueur_manuel.cc
     joueur_montecarlo_.cc
     joueur_alphabeta.cc
+    info_coup.cc
     )
     
 set(HEADERS
@@ -25,6 +26,7 @@ set(HEADERS
     joueur_manuel.hh
     joueur_montecarlo_.hh
     joueur_alphabeta.hh
+    info_coup.hh
     )
 
 add_library(joueurs ${SRCS} ${HEADERS})

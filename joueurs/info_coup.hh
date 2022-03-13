@@ -1,7 +1,12 @@
+#pragma once
+
 #include "../brix.hh"
 #include "../jeu.hh"
 #include <memory>
 #include <vector>
+
+
+
 struct s_position
 {
     unsigned short ordonne;
