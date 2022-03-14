@@ -8,6 +8,8 @@ joueurs/CMakeCache.txt
 
 joueurs/Makefile
 
+joueurs/test_coups
+
 Makefile
 
 CMakeCache
@@ -36,3 +38,6 @@ CMakeFiles/
 # Support for Project snippet scope
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
+
+joueurs/fichier_infos.csv
+joueurs/data_dump
