@@ -12,22 +12,21 @@ Joueur_AlphaBeta::Joueur_AlphaBeta(std::string nom, bool joueur)
 }
 */
 
-std::unique_ptr<std::vector<Brix>> Joueur_AlphaBeta::rechercheCoupValide(Jeu &jeu)
+std::unique_ptr<std::vector<Brix>> Joueur_AlphaBeta::rechercheCoupValide(JeuBinaire &plateauBinaire)
 {
 
     // VARIABLES LOCALES
     std::unique_ptr<std::vector<Brix>> coupValide = std::make_unique<std::vector<Brix>>();
-    std::bitset<8 * 44 * 2> plateauBinaire; // Plateau convertis en binaire, si X -> bit à 10, si O -> bit à 01, sinon bit à 00
-
+    
     Brix b_candidate;
-    int tour = jeu.nbCoupJoue() + 1; // la b_candidate devra être valide au tour auquel on va la jouer,i.e. au tour suivant
+    int tour = plateauBinaire.nbCoupJoue() + 1; // la b_candidate devra être valide au tour auquel on va la jouer,i.e. au tour suivant
     // ALGO QUI LISTE LES COUPS POSSIBLES
 
     for (int abscisse = 0; abscisse < MAX_LARGEUR; abscisse++)
     { // Pour chaque ligne on va chercher dans chaque colonne
         int ordonnee = 0;
 
-        while (ordonnee < MAX_HAUTEUR && jeu.plateau()[ordonnee][abscisse] != '0')
+        while (ordonnee < MAX_HAUTEUR && plateauBinaire.plateau()[ordonnee][abscisse] != '0')
         {               // Tant que la case n'est pas jouable et la colonne n'est pas pleine
             ordonnee++; // On cherche à la case plus haute
         }
@@ -40,28 +39,24 @@ std::unique_ptr<std::vector<Brix>> Joueur_AlphaBeta::rechercheCoupValide(Jeu &je
             b_candidate.setAllCoord(abscisse, ordonnee, abscisse, ordonnee + 1); // Brix verticale de bottom 'X'
             if (jeu.coup_licite(b_candidate, tour))                              // Le coup est valide
             {
-                     plateauBinaire[i * (MAX_HAUTEUR - ligneNumero) * 2 * ligneNumero] = 1;
                 coupValide->push_back(b_candidate); // On ajoute notre coup à la liste des coups jouables
             }
 
             b_candidate.setAllCoord(abscisse, ordonnee + 1, abscisse, ordonnee); // Brix verticale de bottom est 'O'
             if (jeu.coup_licite(b_candidate, tour))
             {
-                    plateauBinaire[i * (MAX_HAUTEUR - ligneNumero) * 2 * ligneNumero + 1] = 1;
                 coupValide->push_back(b_candidate);
             }
 
             b_candidate.setAllCoord(abscisse, ordonnee, abscisse + 1, ordonnee); // Brix horizontale commençant par 'X'
             if (jeu.coup_licite(b_candidate, tour))
             {
-                    plateauBinaire[i * (MAX_HAUTEUR - ligneNumero) * 2 * ligneNumero] = 1;
                 coupValide->push_back(b_candidate);
             }
 
             b_candidate.setAllCoord(abscisse + 1, ordonnee, abscisse, ordonnee); // Brix terminant commençant par 'X'
             if (jeu.coup_licite(b_candidate, tour))
             {
-                    plateauBinaire[i * (MAX_HAUTEUR - ligneNumero) * 2 * ligneNumero + 1] = 1;
                 coupValide->push_back(b_candidate);
             }
             i++;
@@ -79,7 +74,7 @@ std::unique_ptr<std::vector<Brix>> Joueur_AlphaBeta::rechercheCoupValide(Jeu &je
     return coupValide;
 }
 
-coup_select Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::high_resolution_clock::time_point &start, unsigned int &profondeur_max, unsigned int profondeur, Brix &coupAJouer)
+coup_select Joueur_AlphaBeta::alphabeta(JeuBinaire &plateauBinaire, int &alpha, int &beta, std::chrono::high_resolution_clock::time_point &start, unsigned int &profondeur_max, unsigned int profondeur, Brix &coupAJouer)
 {
     // algorithme alpha beta de base
 
@@ -87,18 +82,18 @@ coup_select Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::ch
     if (std::chrono::high_resolution_clock::now() - start > std::chrono::milliseconds(TEMPS_POUR_UN_COUP - 9))
     {
         start -= std::chrono::milliseconds(50000);
-        return alphabeta(jeu, alpha, beta, start, profondeur, profondeur, coupAJouer); // On évalue la feuille actuelle car manque de temps pour explorer
+        return alphabeta(plateauBinaire, alpha, beta, start, profondeur, profondeur, coupAJouer); // On évalue la feuille actuelle car manque de temps pour explorer
     }
 
     // On est sur une feuille
     if (profondeur == profondeur_max)
     {
-        auto jeuPointeur = std::make_shared<Jeu>(jeu);
+        auto jeuPointeur = std::make_shared<JeuBinaire>(plateauBinaire);
         info_coup scoreCoup(coupAJouer, jeuPointeur, (this->joueur() ? 'o' : 'x'), 0);
         return {coupAJouer,scoreCoup.eval()}; // coup_select(coup, score);
     }
     // On doit faire un appel récursif pour continuer
-    auto coups_valides = std::move(rechercheCoupValide(jeu)); // Liste des coups valides
+    auto coups_valides = std::move(rechercheCoupValide(plateauBinaire)); // Liste des coups valides
     bool NoeudMin = false;                                    // Le noeud est-il un noeud min ou max?
     if (profondeur % 2 == 0)
 
@@ -109,11 +104,11 @@ coup_select Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::ch
     // Pour chaque coup possible, on explore l'arbre
     for (auto coups : *coups_valides)
     {
-        Jeu jeuBis = jeu;
+        auto jeuBis = plateauBinaire;
         jeuBis.joue(coups);
         auto jeuPointeur = std::make_shared<Jeu>(jeuBis);
 
-        select = alphabeta(jeuBis, alpha, beta, start, profondeur_max, profondeur + 1, coupAJouer);
+        select = alphabeta(plateauBinaire, alpha, beta, start, profondeur_max, profondeur + 1, coupAJouer);
         if (NoeudMin)
         {
             if (alpha > select.score)
@@ -149,34 +144,6 @@ coup_select Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::ch
     return select;
 }
 
-std::bitset<8 * 44 * 2> Joueur_AlphaBeta::initialiserBitset(Jeu &jeu)
-{
-    std::bitset<8 * 44 * 2> plateauBinaire; // Plateau convertis en binaire, si X -> bit à 10, si O -> bit à 01, sinon bit à 00
-    for (int i = MAX_HAUTEUR; i >= 0; i--)
-    {
-        auto ligne = jeu.plateau()[i];
-        unsigned int ligneNumero = 0;
-        for (auto colonne : ligne)
-        {
-            if (colonne == 'o'){
-                plateauBinaire[i * 2 + ligneNumero * MAX_HAUTEUR + 1] = 1;
-                std::cout << "01";
-            }
-            else if (colonne == 'x')
-            {
-                plateauBinaire[i * 2 + ligneNumero * MAX_HAUTEUR] = 1;
-                std::cout << "10";
-            }
-            else{
-                std::cout << " | ";
-            }
-            ligneNumero++;
-        }
-        std::cout << std::endl;
-    }
-    return plateauBinaire;
-}
-
 /*
 std::ostream& plateauBinaireAffiche( std::ostream &flux, std::bitset<8 * 44 * 2> const& jeu ){
 //void Jeu::afficher( std::ostream &flux) const {
@@ -208,6 +175,6 @@ void Joueur_AlphaBeta::recherche_coup(Jeu jeu, Brix &coup)
     auto plateauBinaire = initialiserBitset(jeu);
     //plateauBinaireAffiche(std::cout, plateauBinaire);
     Brix coupAJouer;
-    alphabeta(jeu, alpha, beta, start, profondeur_max, profondeur, coupAJouer);
+    alphabeta(plateauBinaire, alpha, beta, start, profondeur_max, profondeur, coupAJouer);
     coup.setAllCoord(coupAJouer.getAx(), coupAJouer.getOx(), coupAJouer.getAo(), coupAJouer.getOo());
 }
