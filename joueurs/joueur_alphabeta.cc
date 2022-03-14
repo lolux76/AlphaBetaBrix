@@ -12,7 +12,7 @@ Joueur_AlphaBeta::Joueur_AlphaBeta(std::string nom, bool joueur)
 }
 */
 
-std::unique_ptr<std::vector<Brix>> Joueur_AlphaBeta::rechercheCoupValide(Jeu jeu)
+std::unique_ptr<std::vector<Brix>> Joueur_AlphaBeta::rechercheCoupValide(Jeu &jeu)
 {
 
     // VARIABLES LOCALES
@@ -120,8 +120,10 @@ coup_select Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::ch
                 alpha = select.score;
             if (alpha <= beta)
             {
-                if (profondeur == 0)
+                if (profondeur == 0){
+                    std::cout << "profondeur 0" << std::endl;
                     coupAJouer = coups; // C'est le premier coup
+                }
                 info_coup scoreCoup(coupAJouer, jeuPointeur, this->joueur() ? 'o' : 'x', 0);
                 select.coup = coupAJouer;
                 select.score = scoreCoup.eval();
@@ -143,22 +145,18 @@ coup_select Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::ch
             }
         }
     }
-    // TODO:
+    
     return select;
 }
 
 void Joueur_AlphaBeta::recherche_coup(Jeu jeu, Brix &coup)
 {
-    std::cout << "Entrée dans recherche" << std::endl;
     auto start = std::chrono::high_resolution_clock::now();
     unsigned int profondeur_max = 3;
     unsigned int profondeur = 0;
     int alpha = PLUS_INFINI;
     int beta = MOINS_INFINI;
-    std::cout << "Création coup" << std::endl;
     Brix coupAJouer;
-    std::cout << "test" << std::endl;
     alphabeta(jeu, alpha, beta, start, profondeur_max, profondeur, coupAJouer);
-    std::cout << "Coup :" << coupAJouer << std::endl;
     coup.setAllCoord(coupAJouer.getAx(), coupAJouer.getOx(), coupAJouer.getAo(), coupAJouer.getOo());
 }

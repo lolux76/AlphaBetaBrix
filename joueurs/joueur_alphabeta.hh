@@ -22,7 +22,7 @@ public:
   Joueur_AlphaBeta(std::string nom, bool joueur);
   // char nom_abbrege() const override;
 
-  static std::unique_ptr<std::vector<Brix>> rechercheCoupValide(Jeu jeu);
+  static std::unique_ptr<std::vector<Brix>> rechercheCoupValide(Jeu &jeu);
   coup_select alphabeta(Jeu &jeu, int &alpha, int &beta, std::chrono::high_resolution_clock::time_point &start, unsigned int &profondeur_max, unsigned int profondeur, Brix &coupAJouer); // Algorithme alpha beta de base
 
   void recherche_coup(Jeu jeu, Brix &coup) override;
