@@ -102,7 +102,7 @@ void info_coup::afficher_info_coup(std::string const &fichier) const
         fl.open(fichier, std::ios_base::app);
         if (fl.is_open())
         {
-            fl << _nb_tour << ";" << _nb_piece_aligne_joueur[0] << ";" << _nb_piece_aligne_joueur[1] << ";" << _nb_piece_aligne_joueur[2] << ";" << _nb_piece_aligne_adversaires[0] << ";" << _nb_piece_aligne_adversaires[1] << ";" << _nb_piece_aligne_adversaires[2] << ";" << _pos_j.abcisse << ";" << _pos_j.ordonne << ";" << _pos_a.abcisse << ";" << _pos_a.ordonne << ";" << _taux_victoire << std::endl;
+            fl << _nb_tour << ";" << _nb_piece_aligne_joueur[0] << ";" << _nb_piece_aligne_joueur[1] << ";" << _nb_piece_aligne_joueur[2] << ";" <<  _nb_piece_aligne_joueur[3] << ";" << _nb_piece_aligne_adversaires[0] << ";" << _nb_piece_aligne_adversaires[1] << ";" << _nb_piece_aligne_adversaires[2] << ";" << _nb_piece_aligne_adversaires[3] << ";" <<_pos_j.abcisse << ";" << _pos_j.ordonne << ";" << _pos_a.abcisse << ";" << _pos_a.ordonne << ";" << _taux_victoire << std::endl;
             fl.close();
         }
     }
@@ -166,14 +166,14 @@ void info_coup::alignement()
         // diagonale HG
         if (align_j[3] && !horsPlateau(_pos_j.ordonne + i, _pos_j.abcisse - i) && _jeu->plateau()[_pos_j.ordonne + i][_pos_j.abcisse - i] == _piece)
         {
-            _nb_piece_aligne_joueur[2]++;
+            _nb_piece_aligne_joueur[3]++;
         }
         else
             align_j[3] = false;
 
         if (align_a[3] && !horsPlateau(_pos_a.ordonne + i, _pos_a.abcisse - i) && _jeu->plateau()[_pos_a.ordonne + i][_pos_a.abcisse - i] == _piece_a)
         {
-            _nb_piece_aligne_adversaires[2]++;
+            _nb_piece_aligne_adversaires[3]++;
         }
         else
             align_a[3] = false;
@@ -211,29 +211,31 @@ void info_coup::alignement()
         // diagonale BD
         if (align_j[6] && !horsPlateau(_pos_j.ordonne - i, _pos_j.abcisse + i) && _jeu->plateau()[_pos_j.ordonne - i][_pos_j.abcisse + i] == _piece)
         {
-            _nb_piece_aligne_joueur[2]++;
+            _nb_piece_aligne_joueur[3]++;
         }
         else
             align_j[6] = false;
 
         if (align_a[6] && !horsPlateau(_pos_a.ordonne - i, _pos_a.abcisse + i) && _jeu->plateau()[_pos_a.ordonne - i][_pos_a.abcisse + i] == _piece_a)
         {
-            _nb_piece_aligne_adversaires[2]++;
+            _nb_piece_aligne_adversaires[3]++;
         }
         else
             align_a[6] = false;
     }
 }
+
+
 int info_coup::eval()
 {
     alignement();
 
     return (
-               1 + (_nb_piece_aligne_joueur[0] + _nb_piece_aligne_joueur[1] + _nb_piece_aligne_joueur[2])
+               1 + (_nb_piece_aligne_joueur[0] + _nb_piece_aligne_joueur[1] + _nb_piece_aligne_joueur[2] + _nb_piece_aligne_joueur[3])
 
                -
 
-               (_nb_piece_aligne_adversaires[0] + _nb_piece_aligne_adversaires[1] + _nb_piece_aligne_adversaires[2])
+               (_nb_piece_aligne_adversaires[0] + _nb_piece_aligne_adversaires[1] + _nb_piece_aligne_adversaires[2] + _nb_piece_aligne_adversaires[3])
 
                    )
 

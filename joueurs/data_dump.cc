@@ -11,7 +11,7 @@ int main()
     fl.open("fichier_infos.csv");
     if (fl.is_open())
     {
-        fl << "nb_tour" << ";" << "nb_piece_aligne_joueur_horizont" << ";" << "nb_piece_aligne_joueur_vert"<< ";" << "nb_piece_aligne_joueur_diag" << ";" << "nb_piece_aligne_joueur_horiz_adv" << ";" << "nb_piece_aligne_joueur_vert_adv" << ";" << "nb_piece_aligne_joueur_vert_diag" << ";" << "POS J ABS" << ";" << "POS J ORD" << ";" << "POS A ABS" << ";" << "POS A ORD" << ";" << "taux_victoire" << std::endl;
+        fl << "nb_tour" << ";" << "nb_piece_aligne_joueur_horizont" << ";" << "nb_piece_aligne_joueur_vert"<< ";" << "nb_piece_aligne_joueur_diag_montante" << ";"<< "nb_piece_aligne_joueur_diag_descendante" << ";" << "nb_piece_aligne_joueur_horiz_adv" << ";" << "nb_piece_aligne_joueur_vert_adv" << ";" << "nb_piece_aligne_joueur_diag_montante_adv" << ";" << "nb_piece_aligne_joueur_diag_descendante_adv" << ";" << "POS J ABS" << ";" << "POS J ORD" << ";" << "POS A ABS" << ";" << "POS A ORD" << ";" << "taux_victoire" << std::endl;
         fl.close();
     }
 

@@ -68,18 +68,18 @@ int main()
     // std::cout << info2.accNbPieceAlignA()[0] << std::endl;
 
     // // TEST DIAGONALE :
-    Brix b10(1,0,0,0);
-    Brix b11(0,1,1,1);
-    Brix b12(0,3,1,3);
-    Brix b13(5,0,6,0);
-    Brix b14(4,1,5,1);
-    Brix b15(4,3,5,3);
-    Brix b16(5,4,6,4);
-    Brix b17(3,2,2,2);
+    Brix b10(0,0,1,0);
+    Brix b11(0,2,1,2);
+    //Brix b12(1,3,1,2);
+    Brix b13(3,3,3,2);
+    Brix b14(4,2,5,2);
+    Brix b15(5,3,4,3);
+    Brix b16(4,0,5,0);
+    Brix b17(3,1,2,1);
 
     jeux.joue(b10);
     jeux.joue(b11);
-    jeux.joue(b12);
+    //jeux.joue(b12);
     jeux.joue(b13);
     jeux.joue(b14);
     jeux.joue(b15);
@@ -94,6 +94,8 @@ int main()
     std::cout << "alignement diagonale : "<<std::endl;
     std::cout << info3.accNbPieceAlignJ()[2]<< std::endl;
     std::cout << info3.accNbPieceAlignA()[2] << std::endl;
+    std::cout << info3.accNbPieceAlignJ()[3]<< std::endl;
+    std::cout << info3.accNbPieceAlignA()[3] << std::endl;
 
     // // TEST HORS PLATEAU :
     // Brix b18(7,1,6,1);

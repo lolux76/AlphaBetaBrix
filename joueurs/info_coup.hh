@@ -11,14 +11,16 @@ struct s_position
 class info_coup
 {
 private:
-    unsigned short _nb_piece_aligne_joueur[3];
+    unsigned short _nb_piece_aligne_joueur[4];
     // 0 : ligne
     // 1 : colonne
-    // 2 : diagonale
-    unsigned short _nb_piece_aligne_adversaires[3];
+    // 2 : diagonale montante
+    // 3 : diagonale descendante
+    unsigned short _nb_piece_aligne_adversaires[4];
     // 0 : ligne
     // 1 : colonne
-    // 2 : diagonale
+    // 2 : diagonale montante
+    // 3 : diagonale descendante
     unsigned short _nb_tour;
     double _taux_victoire;
 
@@ -43,6 +45,8 @@ public:
         ret.push_back(_nb_piece_aligne_joueur[0]);
         ret.push_back(_nb_piece_aligne_joueur[1]);
         ret.push_back(_nb_piece_aligne_joueur[2]);
+        ret.push_back(_nb_piece_aligne_joueur[3]);
+
         return ret;
 
     }
@@ -52,6 +56,8 @@ public:
         ret.push_back(_nb_piece_aligne_adversaires[0]);
         ret.push_back(_nb_piece_aligne_adversaires[1]);
         ret.push_back(_nb_piece_aligne_adversaires[2]);
+        ret.push_back(_nb_piece_aligne_adversaires[3]);
+
         return ret;
     }
 
