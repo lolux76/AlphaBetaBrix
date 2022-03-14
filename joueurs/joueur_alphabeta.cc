@@ -148,12 +148,12 @@ std::bitset<8 * 44 * 2> Joueur_AlphaBeta::initialiserBitset(Jeu jeu)
         for (auto colonne : ligne)
         {
             if (colonne == 'o'){
-                plateauBinaire[i * (MAX_HAUTEUR - ligneNumero) * 2 * ligneNumero + 1] = 1;
+                plateauBinaire[i * 2 + ligneNumero * MAX_HAUTEUR + 1] = 1;
                 std::cout << "01";
             }
             else if (colonne == 'x')
             {
-                plateauBinaire[i * (MAX_HAUTEUR - ligneNumero) * 2 * ligneNumero] = 1;
+                plateauBinaire[i * 2 + ligneNumero * MAX_HAUTEUR] = 1;
                 std::cout << "10";
             }
             else{
@@ -163,9 +163,29 @@ std::bitset<8 * 44 * 2> Joueur_AlphaBeta::initialiserBitset(Jeu jeu)
         }
         std::cout << std::endl;
     }
-
     return plateauBinaire;
 }
+
+/*
+std::ostream& plateauBinaireAffiche( std::ostream &flux, std::bitset<8 * 44 * 2> const& jeu ){
+//void Jeu::afficher( std::ostream &flux) const {
+    int j;
+    for(int i=MAX_HAUTEUR -1; i>=0; i--){
+            flux<<'|';
+            for (int j=0; j < 8; j+= 2){
+                std::cout << jeu[i * 2 + j * MAX_HAUTEUR] << jeu[i * 2 + j * MAX_HAUTEUR + 1];
+                    flux<< " |";
+            flux<<"  "<<i<<std::endl;
+            }
+        }
+    flux<<std::endl << '|';
+    for (j=0 ; j<MAX_LARGEUR ; j++) {
+            flux << j << '|';
+        }
+    flux << std::endl;
+    return flux;
+}
+*/
 
 void Joueur_AlphaBeta::recherche_coup(Jeu jeu, Brix &coup)
 {
@@ -176,7 +196,7 @@ void Joueur_AlphaBeta::recherche_coup(Jeu jeu, Brix &coup)
     int alpha = PLUS_INFINI;
     int beta = MOINS_INFINI;
     auto plateauBinaire = initialiserBitset(jeu);
-    std::cout << plateauBinaire << std::endl;
+    //plateauBinaireAffiche(std::cout, plateauBinaire);
     Brix coupAJouer;
     alphabeta(jeu, alpha, beta, start, profondeur_max, profondeur, coupAJouer);
     std::cout << "Coup :" << coupAJouer << std::endl;
