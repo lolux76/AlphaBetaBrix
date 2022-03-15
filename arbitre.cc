@@ -39,7 +39,7 @@ void Arbitre::initialisation()
             _joueur1 = std::make_shared<Joueur_Random> ("Aleatoire",true);
             break;
         case player::A_1:
-        _joueur1 = std::make_shared<Joueur_AlphaBeta> ("AlphaBeta",true);
+        _joueur1 = std::make_shared<H001> ("H001",true);
         break;
         case player::A_2:
         _joueur1 = std::make_shared<Joueur_AlphaBeta> ("MaxAlphaBeta",true);
@@ -51,7 +51,7 @@ void Arbitre::initialisation()
     //si le numero de partie est impair, c'est _joueur2 qui commence
     switch (((!(_numero_partie%2))? _player1 : _player2)) {
         case player::A_1:
-            _joueur2 = std::make_shared<Joueur_AlphaBeta> ("AlphaBeta",false);
+            _joueur2 = std::make_shared<H001> ("H001",false);
             break;
         case player::A_2:
             _joueur2 = std::make_shared<Joueur_AlphaBeta> ("MaxAlphaBeta",false);

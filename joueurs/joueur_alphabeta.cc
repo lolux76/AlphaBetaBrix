@@ -85,7 +85,7 @@ coup_select Joueur_AlphaBeta::alphabeta(Jeu &jeu, int &alpha, int &beta, std::ch
      ***/
 
     // Vérification qu'il nous reste du temps pour jouer
-    if (std::chrono::high_resolution_clock::now() - start > std::chrono::milliseconds(TEMPS_POUR_UN_COUP - 100))
+    if (std::chrono::high_resolution_clock::now() - start > std::chrono::milliseconds(TEMPS_POUR_UN_COUP - 1))
     {
         start -= std::chrono::milliseconds(50000);
         return alphabeta(jeu, alpha, beta, start, profondeur, profondeur, coupAJouer); // On évalue la feuille actuelle car manque de temps pour explorer
