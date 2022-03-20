@@ -166,7 +166,6 @@ int Joueur_AlphaBeta::alphaExtractVal(Jeu const &jeu, int alpha, int beta, std::
 
     if ((profondeur % 2) == 1) // calcul du minimisant / maximisant
     {
-        beta = PLUS_INFINI;
         int min = PLUS_INFINI;
 
         for (long unsigned int i = 0; i < coups_valides->size(); i++)
@@ -195,7 +194,7 @@ int Joueur_AlphaBeta::alphaExtractVal(Jeu const &jeu, int alpha, int beta, std::
     else
     {
         int max = MOINS_INFINI;
-        alpha = MOINS_INFINI;
+
         for (long unsigned int i = 0; i < coups_valides->size(); i++)
         {
 
@@ -228,7 +227,7 @@ int Joueur_AlphaBeta::alphabeta(Jeu const &jeu, int alpha, int beta, std::chrono
     // dernière profondeur :
     if (profondeur == profondeur_max)
     {
-        return alphaExtractVal(jeu, alpha, beta, start, profondeur + 1); // coup_select(coup, score);
+        return alphaExtractVal(jeu, alpha, beta, start, profondeur); // coup_select(coup, score);
     }
 
     // Vérification qu'il nous reste du temps pour jouer
@@ -237,12 +236,10 @@ int Joueur_AlphaBeta::alphabeta(Jeu const &jeu, int alpha, int beta, std::chrono
     // On doit faire un appel récursif pour continuer
     auto coups_valides = std::move(rechercheCoupValide(jeu)); // Liste des coups valides
 
-    bool NoeudMin = (profondeur % 2) == 1;
-
     int select; // Pour le moment aucun coups n'est joué, donc la valeur actuelle de la partie est nulle
     // Pour chaque coup possible, on explore l'arbre
 
-    if (NoeudMin)
+    if ((profondeur % 2) == 1) // minimisant
     {
         int min = PLUS_INFINI;
 
@@ -252,6 +249,8 @@ int Joueur_AlphaBeta::alphabeta(Jeu const &jeu, int alpha, int beta, std::chrono
 
             if (temps_ecoule(start, TEMPS_POUR_UN_COUP))
             {
+                std::cerr << "timeout" << std::endl;
+
                 auto coup = info_coup(coups, std::make_shared<Jeu>(jeuBis), (this->joueur() ? 'o' : 'x'), 0);
                 coup.eval(&select);
                 return select;
@@ -259,7 +258,7 @@ int Joueur_AlphaBeta::alphabeta(Jeu const &jeu, int alpha, int beta, std::chrono
 
             jeuBis.joue(coups);
 
-            select = alphabeta(jeuBis, alpha, beta, start, PROF_MAX, profondeur + 1);
+            select = alphabeta(jeuBis, alpha, beta, start, PROF_MAX, (profondeur + 1));
 
             if (select < min)
             {
@@ -288,6 +287,14 @@ int Joueur_AlphaBeta::alphabeta(Jeu const &jeu, int alpha, int beta, std::chrono
             // std::cout << "coup : " << coups << std::endl;
 
             Jeu jeuBis = jeu;
+
+            if (temps_ecoule(start, TEMPS_POUR_UN_COUP))
+            {
+                std::cerr << "timeout" << std::endl;
+                auto coup = info_coup(coups, std::make_shared<Jeu>(jeuBis), (this->joueur() ? 'o' : 'x'), 0);
+                coup.eval(&select);
+                return select;
+            }
             jeuBis.joue(coups);
 
             select = alphabeta(jeuBis, alpha, beta, start, PROF_MAX, profondeur + 1);
@@ -353,7 +360,7 @@ Brix Joueur_AlphaBeta::alphabetaCallback(Jeu const &jeu, std::chrono::high_resol
     int alpha = MOINS_INFINI;
     int beta = PLUS_INFINI;
 
-    int maxi = alpha;
+    int maxi = MOINS_INFINI;
     int i_maxi = -1;
     for (unsigned long i = 0; i < coups_valides->size(); i++)
     {
