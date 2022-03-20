@@ -224,11 +224,11 @@ void info_coup::alignement()
             align_a[6] = false;
     }
 }
-int info_coup::eval()
+void info_coup::eval(int *ret)
 {
     alignement();
 
-    return (
+    *ret = (
                ((_nb_piece_aligne_joueur[0] + _nb_piece_aligne_joueur[1] + _nb_piece_aligne_joueur[2]) 
 
                 -

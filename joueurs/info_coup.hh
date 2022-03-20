@@ -64,7 +64,7 @@ public:
     double print(std::string const &fichier); // retourne le winrate du coup
     void alignement();
 
-    int eval();
+    void eval(int *ret); //pour être threadé
 
     std::shared_ptr<info_coup> clone() const;
 };

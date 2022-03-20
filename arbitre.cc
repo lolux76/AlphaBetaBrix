@@ -138,6 +138,7 @@ result Arbitre::partie()
             std::cerr << std::endl
                       << "mutex non rendu " << std::endl;
             try_lock = true;
+            // throw std::exception();
         }
         else if (_coups[_numero_partie - 1].getDefinie() == false)
         {
