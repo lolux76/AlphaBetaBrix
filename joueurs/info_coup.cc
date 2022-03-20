@@ -229,17 +229,17 @@ int info_coup::eval()
     alignement();
 
     return (
-               1 + (_nb_piece_aligne_joueur[0] + _nb_piece_aligne_joueur[1] + _nb_piece_aligne_joueur[2])
+               ((_nb_piece_aligne_joueur[0] + _nb_piece_aligne_joueur[1] + _nb_piece_aligne_joueur[2]) * 2
 
-               -
+                -
 
-               (_nb_piece_aligne_adversaires[0] + _nb_piece_aligne_adversaires[1] + _nb_piece_aligne_adversaires[2])
+                (_nb_piece_aligne_adversaires[0] + _nb_piece_aligne_adversaires[1] + _nb_piece_aligne_adversaires[2]) * 3
 
-                   )
+                )
 
-           *
+               +
 
-           (5 - std::abs(4 - _pos_j.abcisse)) // favorise les coups au centre
+               (5 - std::abs(4 - _pos_j.abcisse))) // favorise les coups au centre
 
            *
 

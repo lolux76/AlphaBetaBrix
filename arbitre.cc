@@ -103,7 +103,7 @@ int Arbitre::challenge()
                                    : (!(_numero_partie % 2) ? victoire_joueur_1++
                                                             : victoire_joueur_2++));
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(0)); // temps de latence entre deux parties
+        // std::this_thread::sleep_for(std::chrono::milliseconds(0)); // temps de latence entre deux parties
         _numero_partie++;
         initialisation();
     }

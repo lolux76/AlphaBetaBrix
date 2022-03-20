@@ -1,7 +1,6 @@
 #include "../brix.hh"
 #include "../jeu.hh"
 #include "info_coup.hh"
-#include "joueur_alphabeta.hh"
 #include <ostream>
 #include <chrono>
 
