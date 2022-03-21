@@ -5,7 +5,7 @@
 #include <ostream>
 #include <cmath>
 
-info_coup::info_coup(Brix const &coup, std::shared_ptr<Jeu> const &jeu, char piece, unsigned int nb_tour) : _nb_piece_aligne_joueur{0, 0, 0}, _nb_piece_aligne_adversaires{0, 0, 0}, _nb_tour(nb_tour), _taux_victoire(0.), _pos_j({0, 0}), _pos_a({0, 0}), _jeu(jeu), _coup(coup), _piece(piece)
+info_coup::info_coup(Brix const &coup, std::shared_ptr<JeuBinaire> const &JeuBinaire, char piece, unsigned int nb_tour) : _nb_piece_aligne_joueur{0, 0, 0}, _nb_piece_aligne_adversaires{0, 0, 0}, _nb_tour(nb_tour), _taux_victoire(0.), _pos_j({0, 0}), _pos_a({0, 0}), _jeu(JeuBinaire), _coup(coup), _piece(piece)
 {
     _piece_a = (_piece == 'o') ? 'x' : 'o';
 
@@ -34,11 +34,11 @@ bool info_coup::horsPlateau(unsigned int ordonne, unsigned int absisse)
 {
     return ((ordonne > MAX_HAUTEUR) || (ordonne < 0)) || ((absisse > MAX_LARGEUR) || (absisse < 0));
 }
-
+/*
 double info_coup::print(std::string const &fichier)
 {
     alignement();
-    std::shared_ptr<Jeu> jeu_suivant = std::make_shared<Jeu>(*_jeu);
+    std::shared_ptr<JeuBinaire> jeu_suivant = std::make_shared<Jeu>(*_jeu);
     jeu_suivant->joue(_coup);
 
     // jeu terminé, recherche de vainqueur
@@ -91,7 +91,7 @@ double info_coup::print(std::string const &fichier)
     afficher_info_coup(fichier);
     return _taux_victoire;
 }
-
+*/
 // FORMAT : nb tour ; piece_alignees_j horizontalement, piece_alignees_j verticalement, piece_alignees_j diagonalement, piece_alignees_a horizontalement, piece_alignees_a verticalement, piece_alignees_a diagonalement, pos_j ABS, pos_j ORD, pos_a ABS, pos_a ORD, taux_victoire
 void info_coup::afficher_info_coup(std::string const &fichier) const
 {

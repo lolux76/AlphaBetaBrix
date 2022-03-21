@@ -1,107 +1,326 @@
 #include "jeuBinaire.hh"
 
-JeuBinaire::JeuBinaire(Jeu jeu) : nb_tours(jeu.nbCoupJoue())
+JeuBinaire::JeuBinaire(Jeu jeu) : _alignementX(jeu.getAlignement_X()), _alignementO(jeu.getAlignement_O()), _etat(Etat::PARTIE_NON_TERMINEE), _nb_tours(jeu.nbCoupJoue())
 {
-    this->plateauBinaire = initialiserBitset(jeu);
+    initialiserPlateauBinaire(jeu);
 }
 
-JeuBinaireBitset JeuBinaire::initialiserBitset(Jeu &jeu)
+void JeuBinaire::initialiserPlateauBinaire(Jeu jeu)
 {
-    JeuBinaireBitset plateauBinaire; // Plateau convertis en binaire, si XO -> bit à 10, si OX -> bit à 01, sinon bit à 00
-    for (int i = MAX_HAUTEUR; i >= 0; i--)
+
+    for (unsigned long i(0); i < MAX_HAUTEUR; i++)
     {
-        auto ligne = jeu.plateau()[i];
-        unsigned int ligneNumero = 0;
-        for (auto colonne : ligne)
+        for (unsigned long j(0); j < MAX_LARGEUR; j++)
         {
-            if (colonne == 'o')
-            {
-                plateauBinaire[i * 2 + ligneNumero * MAX_HAUTEUR + 1] = 1;
-                std::cout << "01";
-            }
-            else if (colonne == 'x')
-            {
-                plateauBinaire[i * 2 + ligneNumero * MAX_HAUTEUR] = 1;
-                std::cout << "10";
-            }
-            else
-            {
-                std::cout << " | ";
-            }
-            ligneNumero++;
+            _plateau[i][j] = (jeu.plateau()[i][j] == '0') ? 0b00 : (jeu.plateau()[i][j] == 'x') ? 0b01
+                                                                                                : 0b10;
         }
-        std::cout << std::endl;
     }
-    return plateauBinaire;
 }
 
-int JeuBinaire::nbCoupJoue() const
+bool JeuBinaire::coordValide(Brix const &b) const
 {
-    return this->nb_tours;
+    return ((b.getAo() >= 0) && (b.getAo() < MAX_LARGEUR) && (b.getAx() >= 0) && (b.getAx() < MAX_LARGEUR) && (b.getOo() >= 0) && (b.getOo() < MAX_HAUTEUR) && (b.getOx() >= 0) && (b.getOx() < MAX_HAUTEUR));
 }
 
-bool JeuBinaire::coordValide(Brix const &coup) const // La piece est dans le plateau
-{
-    return ((coup.getAx() >= 0) && (coup.getAx() < MAX_LARGEUR) && (coup.getAo() >= 0) && (coup.getAo() < MAX_LARGEUR) && (coup.getOo() >= 0) && (coup.getOo() < MAX_LARGEUR) && (coup.getOx() >= 0) && (coup.getOx() < MAX_LARGEUR));
-}
-
-bool JeuBinaire::voisin(Brix const &coup) const
+// On suppose b est verticale ou horizontale.
+bool JeuBinaire::voisin(Brix const &b) const
 {
     int min;
-    if (coup.horizontale())
+    if (b.horizontale())
     {
-        if (coup.getAx() < coup.getAo())
+        if (b.getAx() < b.getAo())
 
         {
-            if ((coup.getAx() == 0) && (plateauBinaire[coup.getOx() * 2 + 2 * MAX_HAUTEUR] == 0 && plateauBinaire[coup.getOx() * 2 + 2 * MAX_HAUTEUR + 1] == 1) || plateauBinaire[coup.getOx() * 2 + 2 * MAX_HAUTEUR] == 1)
+            if ((b.getAx() == 0) && _plateau[b.getOx()][2] == 0b00)
                 return false;
-            else if ((coup.getAo() == MAX_LARGEUR - 1) && (plateauBinaire[coup.getOx() * 2 + MAX_LARGEUR - 3] == 0 && plateauBinaire[coup.getOx() * 2 + MAX_LARGEUR - 2] == 1) || plateauBinaire[coup.getOx() * 2 + MAX_LARGEUR - 3] == 1)
+            else if ((b.getAo() == MAX_LARGEUR - 1) && _plateau[b.getOx()][MAX_LARGEUR - 3] == 0b00)
                 return false;
             else
-                return (plateauBinaire[coup.getOx() * 2 + coup.getAx() * MAX_HAUTEUR - 1] == 1) || plateauBinaire[coup.getOx() * 2 + coup.getAx() * MAX_HAUTEUR] == 1 || (plateauBinaire[coup.getOx() * 2 + coup.getAo() * MAX_HAUTEUR + 1] == 1);
+                return (_plateau[b.getOx()][b.getAx() - 1] != 0b00) || (_plateau[b.getOx()][b.getAo() + 1] != 0b00);
         }
         else
         {
-            if ((coup.getAo() == 0) && plateauBinaire[coup.getOx() * 2 + MAX_HAUTEUR + 2] == 1)
+            if ((b.getAo() == 0) && _plateau[b.getOx()][2] == 0b00)
                 return false;
-            else if ((coup.getAx() == MAX_LARGEUR - 1) && plateauBinaire[coup.getOx() * 2 + MAX_LARGEUR - 3] == 1)
+            else if ((b.getAx() == MAX_LARGEUR - 1) && _plateau[b.getOx()][MAX_LARGEUR - 3] == 0b00)
                 return false;
-            return (plateauBinaire[coup.getOx() * 2 + (coup.getAo() - 1) * MAX_HAUTEUR] == 1) || (plateauBinaire[coup.getOx()* 2 + (coup.getAx() + 1) * MAX_HAUTEUR] == 1);
+            return (_plateau[b.getOx()][b.getAo() - 1] != 0b00) || (_plateau[b.getOx()][b.getAx() + 1] != 0b00);
         };
     }
-    else if (coup.verticale())
+    else if (b.verticale())
     {
-        min = coup.getOo() < coup.getOx() ? coup.getOo() : coup.getOx();
-        if ((coup.getAx() == 0) && (plateauBinaire[min * 2 + 1] == 1||plateauBinaire[min * 2 + 2 * MAX_HAUTEUR] == 1))
+        min = b.getOo() < b.getOx() ? b.getOo() : b.getOx();
+        if ((b.getAx() == 0) && _plateau[min][1] == 0b00)
             return false;
-        else if ((coup.getAx() == MAX_LARGEUR - 1) && plateauBinaire[min* 2 + (MAX_LARGEUR - 2) * MAX_HAUTEUR] == 1)
+        else if ((b.getAx() == MAX_LARGEUR - 1) && _plateau[min][MAX_LARGEUR - 2] == 0b00)
             return false;
         else
-            return (plateauBinaire[min * 2 + (coup.getAx() - 1) * MAX_HAUTEUR] == 1) || (plateauBinaire[min * 2 + (coup.getAx() + 1) * MAX_HAUTEUR] == 1);
+            return (_plateau[min][b.getAx() - 1] != 0b00) || (_plateau[min][b.getAx() + 1] != 0b00);
     }
     else
         return false;
     return true;
 }
 
+int JeuBinaire::nbCoupJoue() const
+{
+    return _nb_tours;
+}
+
 bool JeuBinaire::coup_licite(Brix const &coup, int nb) const
 {
-    if (!coup.getDefinie() || !coordValide(coup) || !coup.bienformee() || (plateauBinaire[coup.getOo() * 2 + coup.getAo() * MAX_HAUTEUR] == 0 && plateauBinaire[coup.getOx() * 2 + coup.getAx() * MAX_HAUTEUR + 1] == 1) || (plateauBinaire[coup.getOx() * 2 + coup.getAx() * MAX_HAUTEUR] == 1 && plateauBinaire[coup.getOo() * 2 + coup.getAo() * MAX_HAUTEUR + 1] == 0))
+    if (!coup.getDefinie() || !coordValide(coup) || !coup.bienformee() || _plateau[coup.getOo()][coup.getAo()] != 0b00 || _plateau[coup.getOx()][coup.getAx()] != 0b00)
         return false;
     if (coup.verticale())
     {
         int min;
         min = coup.getOo() < coup.getOx() ? coup.getOo() : coup.getOx();
-        if (min != 0 && plateauBinaire[(min - 1) * 2 + coup.getAo() * MAX_HAUTEUR] == 0 && plateauBinaire[(min - 1) * 2 + coup.getAx() * MAX_HAUTEUR + 1] == 1)
+        if (min != 0 && _plateau[min - 1][coup.getAo()] == 0b00)
             return false;
     };
     if (coup.horizontale())
     {
-        if ((coup.getOx() != 0 && plateauBinaire[(coup.getOx() - 1) * 2 + coup.getAx() * MAX_HAUTEUR] == 0 && plateauBinaire[(coup.getOo() - 1) * 2 + coup.getAo() * MAX_HAUTEUR + 1] == 1) ||
-            (coup.getOo() != 0 && plateauBinaire[(coup.getOo() - 1) * 2 + coup.getAo() * MAX_HAUTEUR] == 0) && plateauBinaire[(coup.getOx() - 1) * 2 + coup.getAx() + 1] == 0)
+        if ((coup.getOx() != 0 && _plateau[coup.getOx() - 1][coup.getAx()] == 0b00) ||
+            (coup.getOo() != 0 && _plateau[coup.getOo() - 1][coup.getAo()] == 0b00))
             return false;
     };
     if ((nb != 1) && (coup.getOx() == 0 || coup.getOo() == 0) && !voisin(coup))
         return false;
     return true;
+}
+
+void JeuBinaire::joue(Brix const &coup)
+{
+    _nb_tours++;
+    _plateau[coup.getOo()][coup.getAo()] = 0b10;
+    _plateau[coup.getOx()][coup.getAx()] = 0b01;
+    int min;
+
+    // doit déterminer la valeur de _alignementX , _alignementO ET changer l'etat en fonction,
+
+    // recherche d'alignements horizontaux ou verticaux si la piece est verticale
+    if (coup.verticale())
+    {
+        min = coup.getOo() < coup.getOx() ? coup.getOo() : coup.getOx();
+
+        // recherche d'alignement verticale en extension
+        if (min >= 3)
+        {
+            if ((_plateau[min][coup.getAx()] == _plateau[min - 1][coup.getAx()]) && (_plateau[min][coup.getAx()] == _plateau[min - 2][coup.getAx()]) && (_plateau[min][coup.getAx()] == _plateau[min - 3][coup.getAx()]))
+            {
+                if (_plateau[min][coup.getAx()] == 0b01)
+                    _alignementX = true;
+                else
+                    _alignementO = true;
+            }
+        }
+
+        // recherche d'alignements horizontaux en intension
+
+        // etage min
+        // on regarde à droite
+        int cpt = 0, i = coup.getAx() + 1;
+        while (i < MAX_LARGEUR && (_plateau[min][coup.getAx()] == _plateau[min][i]))
+        {
+            cpt++;
+            i++;
+        };
+        // on regarde à gauche
+        i = coup.getAx() - 1;
+        while (i >= 0 && (_plateau[min][coup.getAx()] == _plateau[min][i]))
+        {
+            cpt++;
+            i--;
+        };
+        if (cpt >= 3)
+        {
+            if (_plateau[min][coup.getAx()] == 0b01)
+                _alignementX = true;
+            else
+                _alignementO = true;
+        }
+        // etage min +1
+        cpt = 0;
+        i = coup.getAx() + 1;
+        // on regarde à droite
+        while (i < MAX_LARGEUR && (_plateau[min + 1][coup.getAx()] == _plateau[min + 1][i]))
+        {
+            cpt++;
+            i++;
+        };
+        // on regarde à gauche
+        i = coup.getAx() - 1;
+        while (i >= 0 && (_plateau[min + 1][coup.getAx()] == _plateau[min + 1][i]))
+        {
+            cpt++;
+            i--;
+        };
+        if (cpt >= 3)
+        {
+            if (_plateau[min + 1][coup.getAx()] == 0b01)
+                _alignementX = true;
+            else
+                _alignementO = true;
+        }
+    }
+    // recherche d'alignements horizontaux ou verticaux si la piece est horizontale
+    else if (coup.horizontale())
+    {
+        // recherche des alignements verticaux en extension
+        if (coup.getOx() >= 3)
+        {
+            if ((_plateau[coup.getOx()][coup.getAx()] == _plateau[coup.getOx() - 1][coup.getAx()]) && (_plateau[coup.getOx()][coup.getAx()] == _plateau[coup.getOx() - 2][coup.getAx()]) && (_plateau[coup.getOx()][coup.getAx()] == _plateau[coup.getOx() - 3][coup.getAx()]))
+                _alignementX = true;
+            if ((_plateau[coup.getOo()][coup.getAo()] == _plateau[coup.getOo() - 1][coup.getAo()]) && (_plateau[coup.getOo()][coup.getAo()] == _plateau[coup.getOo() - 2][coup.getAo()]) && (_plateau[coup.getOo()][coup.getAo()] == _plateau[coup.getOo() - 3][coup.getAo()]))
+                _alignementO = true;
+        }
+        // recherche des alignements horizontaux en extension
+        min = coup.getAo() < coup.getAx() ? coup.getAo() : coup.getAx();
+        if (min >= 3)
+        {
+            // recherche d'un alignement à gauche
+            if ((_plateau[coup.getOx()][min] == _plateau[coup.getOx()][min - 1]) && (_plateau[coup.getOx()][min] == _plateau[coup.getOx()][min - 2]) && (_plateau[coup.getOx()][min] == _plateau[coup.getOx()][min - 3]))
+            {
+                if (_plateau[coup.getOx()][min] == 0b01)
+                    _alignementX = true;
+                else
+                    _alignementO = true;
+            }
+        }
+        if ((min + 1) < MAX_LARGEUR - 3)
+        {
+            // recherche d'un alignement à droite
+            if ((_plateau[coup.getOx()][min + 1] == _plateau[coup.getOx()][min + 2]) && (_plateau[coup.getOx()][min + 1] == _plateau[coup.getOx()][min + 3]) && (_plateau[coup.getOx()][min + 1] == _plateau[coup.getOx()][min + 4]))
+            {
+                if (_plateau[coup.getOx()][min + 1] == 0b01)
+                    _alignementX = true;
+                else
+                    _alignementO = true;
+            }
+        }
+    }
+
+    // On recherche les alignements en diagonale
+    // On s'occupe des x
+    // on regarde en haut à droite
+    int cpt = 0, i = coup.getAx() + 1, j = coup.getOx() + 1;
+    while (i < MAX_LARGEUR && j < MAX_HAUTEUR && (_plateau[coup.getOx()][coup.getAx()] == _plateau[j][i]))
+    {
+        cpt++;
+        i++;
+        j++;
+    };
+    // on regarde en bas à gauche
+    i = coup.getAx() - 1;
+    j = coup.getOx() - 1;
+    while (i >= 0 && j >= 0 && (_plateau[coup.getOx()][coup.getAx()] == _plateau[j][i]))
+    {
+        cpt++;
+        i--;
+        j--;
+    };
+    if (cpt >= 3)
+    {
+        _alignementX = true;
+    }
+
+    // on regarde en haut à gauche
+    cpt = 0;
+    i = coup.getAx() - 1;
+    j = coup.getOx() + 1;
+    while (i >= 0 && j < MAX_HAUTEUR && (_plateau[coup.getOx()][coup.getAx()] == _plateau[j][i]))
+    {
+        cpt++;
+        i--;
+        j++;
+    };
+    // on regarde en bas à droite
+    i = coup.getAx() + 1, j = coup.getOx() - 1;
+    while (i < MAX_LARGEUR && j >= 0 && (_plateau[coup.getOx()][coup.getAx()] == _plateau[j][i]))
+    {
+        cpt++;
+        i++;
+        j--;
+    };
+    if (cpt >= 3)
+    {
+        _alignementX = true;
+    }
+
+    // On s'occuppe des o
+    // on regarde en haut à droite
+    cpt = 0, i = coup.getAo() + 1, j = coup.getOo() + 1;
+    while (i < MAX_LARGEUR && j < MAX_HAUTEUR && (_plateau[coup.getOo()][coup.getAo()] == _plateau[j][i]))
+    {
+        cpt++;
+        i++;
+        j++;
+    };
+    // on regarde en bas à gauche
+    i = coup.getAo() - 1;
+    j = coup.getOo() - 1;
+    while (i >= 0 && j >= 0 && (_plateau[coup.getOo()][coup.getAo()] == _plateau[j][i]))
+    {
+        cpt++;
+        i--;
+        j--;
+    };
+    if (cpt >= 3)
+    {
+        _alignementO = true;
+    }
+
+    // on regarde en haut à gauche
+    cpt = 0;
+    i = coup.getAo() - 1;
+    j = coup.getOo() + 1;
+    while (i >= 0 && j < MAX_HAUTEUR && (_plateau[coup.getOo()][coup.getAo()] == _plateau[j][i]))
+    {
+        cpt++;
+        i--;
+        j++;
+    };
+    // on regarde en bas à droite
+    i = coup.getAo() + 1, j = coup.getOo() - 1;
+    while (i < MAX_LARGEUR && j >= 0 && (_plateau[coup.getOo()][coup.getAo()] == _plateau[j][i]))
+    {
+        cpt++;
+        i++;
+        j--;
+    };
+    if (cpt >= 3)
+    {
+        _alignementO = true;
+    }
+
+    // Je mets à jour état
+    if (_alignementO && !_alignementX)
+        _etat = Etat::ALIGNEMENT_O;
+
+    if (_alignementX && !_alignementO)
+        _etat = Etat::ALIGNEMENT_X;
+
+    if ((_nb_tours == NB_PIECE_MAX) || (_alignementX && _alignementO))
+        _etat = Etat::PARTIE_NULLE;
+}
+
+bool JeuBinaire::fini() const
+{
+    return (_etat != Etat::PARTIE_NON_TERMINEE);
+}
+
+bool JeuBinaire::partie_nulle() const
+{
+    return (_etat == Etat::PARTIE_NULLE);
+}
+
+bool JeuBinaire::partie_O() const
+{
+    return _etat == Etat::ALIGNEMENT_O;
+}
+
+bool JeuBinaire::partie_X() const
+{
+    return _etat == Etat::ALIGNEMENT_X;
 }

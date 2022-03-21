@@ -4,6 +4,7 @@
 #include "../jeu.hh"
 #include <memory>
 #include <vector>
+#include "jeuBinaire.hh"
 
 
 
@@ -30,7 +31,7 @@ private:
     s_position _pos_j;
     s_position _pos_a;
 
-    std::shared_ptr<Jeu> _jeu;
+    std::shared_ptr<JeuBinaire> _jeu;
 
     Brix _coup;
 
@@ -60,7 +61,7 @@ public:
         return ret;
     }
 
-    info_coup(Brix const &coup, std::shared_ptr<Jeu> const &jeu, char piece, unsigned int nb_tour);
+    info_coup(Brix const &coup, std::shared_ptr<JeuBinaire> const &jeu, char piece, unsigned int nb_tour);
     double print(std::string const &fichier); // retourne le winrate du coup
     void alignement();
 

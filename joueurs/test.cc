@@ -4,7 +4,7 @@
 #include "joueur_alphabeta.hh"
 #include <ostream>
 #include <chrono>
-
+/*
 int main()
 {
     Jeu jeux;
@@ -117,3 +117,4 @@ int main()
 }
 
 // info_coup(Brix const &coup, std::shared_ptr<Jeu> const &jeu, char piece, unsigned int nb_tour);
+*/

@@ -18,8 +18,7 @@ set(SRCS
     joueur_montecarlo_.cc
     joueur_alphabeta.cc
     info_coup.cc
-    h001.cc
-    bitsetgame.cc
+    jeuBinaire.cc
     )
     
 set(HEADERS
@@ -29,37 +28,8 @@ set(HEADERS
     joueur_montecarlo_.hh
     joueur_alphabeta.hh
     info_coup.hh
-    h001.hh
-    bitsetgame.hh
+    jeuBinaire.hh
     )
 
 add_library(joueurs ${SRCS} ${HEADERS})
 target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
-
-add_executable(data_dump
-    data_dump.cc
-    info_coup.hh
-    info_coup.cc
-    joueur_alphabeta.hh
-    joueur_alphabeta.cc
-    ../jeu.hh
-    ../brix.hh
-    ../jeu.cc
-    ../brix.cc
-    joueur.hh
-    joueur.cc
-)
-
-add_executable(test_coups
-    test.cc
-    info_coup.hh
-    info_coup.cc
-    joueur_alphabeta.hh
-    joueur_alphabeta.cc
-    ../jeu.hh
-    ../brix.hh
-    ../jeu.cc
-    ../brix.cc
-    joueur.hh
-    joueur.cc
-)
