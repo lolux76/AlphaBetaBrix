@@ -9,7 +9,7 @@
 
 #define PLUS_INFINI std::numeric_limits<int>::max()  //+ infini, NE JAMAIS FAIRE PLUS_INFINI + QQCHOSE (dépassement de bits)
 #define MOINS_INFINI std::numeric_limits<int>::min() //- infini, NE JAMAIS FAIRE MOINS_INFINI - QQCHOSE (dépassement de bits)
-#define PROF_MAX 1
+#define PROF_MAX 2
 
 struct coup_select
 {
@@ -37,6 +37,27 @@ public:
 
   bool inline temps_ecoule(std::chrono::high_resolution_clock::time_point const &start, short unsigned int TEMPS_POUR_UN_COUP) const
   {
-    return ((std::chrono::high_resolution_clock::now() - start) > std::chrono::milliseconds(TEMPS_POUR_UN_COUP - 3));
+    return ((std::chrono::high_resolution_clock::now() - start) > std::chrono::milliseconds(TEMPS_POUR_UN_COUP - 2));
+  }
+
+  bool inline partie_terminee(Jeu const &j, int &score)
+  {
+    if (j.fini())
+    {
+      // std::cout << "jeu fini" << std::endl;
+      // std::cout << "joueur " << this->joueur() << std::endl;
+      // std::cout << "partie X " << j.partie_X() << std::endl;
+      
+       if ((this->joueur() && j.partie_X()) || (!this->joueur() && j.partie_O()))
+      {
+        score = std::numeric_limits<int>::max();
+      }
+      else
+      {
+        score = std::numeric_limits<int>::min();
+      }
+      return true;
+    }
+    return false;
   }
 };

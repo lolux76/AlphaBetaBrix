@@ -228,18 +228,18 @@ void info_coup::eval(int *ret)
 {
     alignement();
 
-    *ret = (
-               ((_nb_piece_aligne_joueur[0] + _nb_piece_aligne_joueur[1] + _nb_piece_aligne_joueur[2]) 
+    *ret = (((_nb_piece_aligne_joueur[0] + _nb_piece_aligne_joueur[1] + _nb_piece_aligne_joueur[2]) * 3
 
-                -
+             -
 
-                (_nb_piece_aligne_adversaires[0] + _nb_piece_aligne_adversaires[1] + _nb_piece_aligne_adversaires[2]) 
+             (_nb_piece_aligne_adversaires[0] + _nb_piece_aligne_adversaires[1] + _nb_piece_aligne_adversaires[2]) * 4
 
-                )
+                 ) *
+                2
 
-               +
+            +
 
-               (5 - std::abs(4 - _pos_j.abcisse))) // favorise les coups au centre
+            (5 - std::abs(5 - _pos_j.abcisse))) // favorise les coups au centre
 
            *
 
