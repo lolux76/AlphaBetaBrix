@@ -5,7 +5,13 @@
 #include <memory>
 #include <vector>
 
-
+/*
+ * Classe info_coup
+ *
+ * Cette classe contient le code nécessaire au calcul de la fonction d'évaluation.
+ * La fonction tient compte de l'état du jeu et du nombre de pièces alignées pour chaque joueurs.
+ * Elle tient également compte de la position du coup, favorisant les coups au centre permettant d'ouvrir plus de possibilités de jeu par la suite
+ */
 
 struct s_position
 {
@@ -49,7 +55,6 @@ public:
         ret.push_back(_nb_piece_aligne_joueur[1]);
         ret.push_back(_nb_piece_aligne_joueur[2]);
         return ret;
-
     }
     std::vector<unsigned int> accNbPieceAlignA()
     {
@@ -64,7 +69,7 @@ public:
     double print(std::string const &fichier); // retourne le winrate du coup
     void alignement();
 
-    void eval(int *ret); //pour être threadé
+    void eval(int *ret); // pour être threadé
 
     std::shared_ptr<info_coup> clone() const;
 };

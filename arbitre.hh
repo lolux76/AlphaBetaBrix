@@ -14,6 +14,7 @@
 #include "joueurs/joueur_manuel.hh"
 #include "joueurs/joueur_montecarlo_.hh"
 #include "joueurs/joueur_alphabeta.hh"
+#include "joueurs/IPIF.hh"
 //const int TEMPS_POUR_UN_COUP(15000); // millisecondes
 const int TEMPS_POUR_UN_COUP(10);//millisecondes -- temps lors de la compétition
 /**********************************************************************************
@@ -31,7 +32,7 @@ const int TEMPS_POUR_UN_COUP(10);//millisecondes -- temps lors de la compétitio
  * RAND s'appelle Random (R) et RAND2 s'appelle Aleatoire (A)
  * MANUEL s'appelle Caro (C) et MANUEL2 s'appelle Vio (V)
  * */
-enum class player {A_1, A_2, M_1, M_2 , MANUEL , MANUEL2, RAND, RAND2} ;
+enum class player {A_1, A_2, M_1, M_2 , MANUEL , MANUEL2, RAND, RAND2, IPIF_1, IPIF_2} ;
 enum class result {NULLE , X , O, ERREUR } ;
 
 /**

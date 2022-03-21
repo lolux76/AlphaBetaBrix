@@ -1,6 +1,7 @@
 #pragma once
 
 #include "joueur.hh"
+/*
 #include <vector>
 #include "../arbitre.hh"
 #include <memory>
@@ -11,12 +12,28 @@
 #define MOINS_INFINI std::numeric_limits<int>::min() //- infini, NE JAMAIS FAIRE MOINS_INFINI - QQCHOSE (dépassement de bits)
 #define PROF_MAX 2
 
+/*
+ * Classe Ipif
+ *
+ * @author: Bertille Trotin, Emma Faucheux, Grégoire Bellon, Matéo Grimaud
+ * 
+ * Cette classe contient le code de notre Alpha Beta.
+ * La méthode AlphaBeta callback fait office de fonction de callback pour l'appel récursif de l'algorithme.
+ * La méthode AlphaBetaThreadCallback était un essai de threading de l'algorithme, sans être convaincant.
+ * La méthode temps_ecoules nous permet de connaitre le temps qu'il nous reste afin de rendre un coup si nous manquons de temps
+ * La méthode recherche_coup_valide liste tous les coups valides.
+
+
 struct coup_select
 {
   int score;
   bool timeout;
 };
+*/
+class Joueur_AlphaBeta : public Joueur{
 
+};
+/*
 class Joueur_AlphaBeta : public Joueur
 {
 public:
@@ -61,3 +78,4 @@ public:
     return false;
   }
 };
+*/

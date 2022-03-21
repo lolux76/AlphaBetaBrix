@@ -3,7 +3,7 @@
 #include <iostream>
 #include <thread>
 #include <future>
-
+/*
 Joueur_AlphaBeta::Joueur_AlphaBeta(std::string nom, bool joueur)
     : Joueur(nom, joueur)
 {
@@ -13,7 +13,7 @@ Joueur_AlphaBeta::Joueur_AlphaBeta(std::string nom, bool joueur)
 {
     return 'A';
 }
-*/
+
 
 std::unique_ptr<std::vector<Brix>> Joueur_AlphaBeta::rechercheCoupValide(Jeu const &jeu)
 {
@@ -69,7 +69,7 @@ std::unique_ptr<std::vector<Brix>> Joueur_AlphaBeta::rechercheCoupValide(Jeu con
         std::cout << b << " | ";
     }
     std::cout << std::endl;
-    */
+    
     return coupValide;
 }
 
@@ -386,7 +386,7 @@ Brix Joueur_AlphaBeta::alphabetaThreadCallback(Jeu const &jeu, std::chrono::high
     delete[] res_coups;
     return coups_valides->at(i_max);
 }
-*/
+
 
 Brix Joueur_AlphaBeta::alphabetaCallback(Jeu const &jeu, std::chrono::high_resolution_clock::time_point const &start, unsigned int profondeur_max)
 {
@@ -441,3 +441,4 @@ void Joueur_AlphaBeta::recherche_coup(Jeu jeu, Brix &coup)
     return;
     // coup.setAllCoord(ret.getAx(), ret.getOx(), ret.getAo(), ret.getOo());
 }
+*/

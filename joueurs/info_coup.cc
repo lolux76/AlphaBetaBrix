@@ -1,5 +1,5 @@
 #include "info_coup.hh"
-#include "joueur_alphabeta.hh"
+#include "IPIF.hh"
 #include <memory>
 #include <fstream>
 #include <ostream>
@@ -67,7 +67,7 @@ double info_coup::print(std::string const &fichier)
     }
     else
     { // le jeu n'est pas fini
-        auto coups = std::move(Joueur_AlphaBeta::rechercheCoupValide(*jeu_suivant));
+        auto coups = std::move(IPIF::rechercheCoupValide(*jeu_suivant));
         double sum = 0;
         int size = 0;
         for (auto coup : *coups)
