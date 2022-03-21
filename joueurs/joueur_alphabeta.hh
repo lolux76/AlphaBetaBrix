@@ -13,8 +13,8 @@
 
 struct coup_select
 {
-  Brix coup;
   int score;
+  bool timeout;
 };
 
 class Joueur_AlphaBeta : public Joueur
@@ -25,19 +25,19 @@ public:
 
   static std::unique_ptr<std::vector<Brix>> rechercheCoupValide(Jeu const &jeu);
 
-  int alphabeta(Jeu const &jeu, int alpha, int beta, std::chrono::high_resolution_clock::time_point const &start, unsigned int profondeur_max, unsigned int profondeur); // Algorithme alpha beta de base
+  coup_select alphabeta(Jeu const &jeu, int alpha, int beta, std::chrono::high_resolution_clock::time_point const &start, unsigned int profondeur_max, unsigned int profondeur); // Algorithme alpha beta de base
 
   Brix alphabetaThreadCallback(Jeu const &jeu, std::chrono::high_resolution_clock::time_point const &start, unsigned int profondeur_max);
   Brix alphabetaCallback(Jeu const &jeu, std::chrono::high_resolution_clock::time_point const &start, unsigned int profondeur_max);
 
   int alphaExtractValThread(Jeu const &jeu, int alpha, int beta, std::chrono::high_resolution_clock::time_point const &start, unsigned int profondeur);
-  int alphaExtractVal(Jeu const &jeu, int alpha, int beta, std::chrono::high_resolution_clock::time_point const &start, unsigned int profondeur);
+  coup_select alphaExtractVal(Jeu const &jeu, int alpha, int beta, std::chrono::high_resolution_clock::time_point const &start, unsigned int profondeur);
 
   void recherche_coup(Jeu jeu, Brix &coup) override;
 
   bool inline temps_ecoule(std::chrono::high_resolution_clock::time_point const &start, short unsigned int TEMPS_POUR_UN_COUP) const
   {
-    return ((std::chrono::high_resolution_clock::now() - start) > std::chrono::milliseconds(TEMPS_POUR_UN_COUP - 2));
+    return ((std::chrono::high_resolution_clock::now() - start) > std::chrono::microseconds(10000 - 1500));
   }
 
   bool inline partie_terminee(Jeu const &j, int &score)

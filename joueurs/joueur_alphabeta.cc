@@ -158,11 +158,11 @@ int Joueur_AlphaBeta::alphaExtractValThread(Jeu const &jeu, int alpha, int beta,
     }
 }
 
-int Joueur_AlphaBeta::alphaExtractVal(Jeu const &jeu, int alpha, int beta, std::chrono::high_resolution_clock::time_point const &start, unsigned int profondeur)
+coup_select Joueur_AlphaBeta::alphaExtractVal(Jeu const &jeu, int alpha, int beta, std::chrono::high_resolution_clock::time_point const &start, unsigned int profondeur)
 {
     int score = 0;
     if (partie_terminee(jeu, score))
-        return score;
+        return {score, false};
 
     // std::cout << "EXTRACT VAL" << std::endl;
     std::unique_ptr<std::vector<Brix>> coups_valides = std::move(rechercheCoupValide(jeu)); // Liste des coups valides
@@ -181,7 +181,7 @@ int Joueur_AlphaBeta::alphaExtractVal(Jeu const &jeu, int alpha, int beta, std::
             if (temps_ecoule(start, TEMPS_POUR_UN_COUP))
             {
                 std::cerr << "Timeout dans EV" << std::endl;
-                return min;
+                return {min, true};
             }
 
             auto coup = info_coup(coups_valides->at(i), jeu_eval, (this->joueur() ? 'x' : 'o'), 0);
@@ -206,7 +206,7 @@ int Joueur_AlphaBeta::alphaExtractVal(Jeu const &jeu, int alpha, int beta, std::
             }
         }
 
-        return min;
+        return {min, false};
         // std::cout << "return " << mini.coup << std::endl;
     }
     else
@@ -221,7 +221,7 @@ int Joueur_AlphaBeta::alphaExtractVal(Jeu const &jeu, int alpha, int beta, std::
             if (temps_ecoule(start, TEMPS_POUR_UN_COUP))
             {
                 std::cerr << "timeout dans EV" << std::endl;
-                return max;
+                return {max, true};
             }
 
             auto coup = info_coup(coups_valides->at(i), jeu_eval, (this->joueur() ? 'o' : 'x'), 0);
@@ -244,16 +244,16 @@ int Joueur_AlphaBeta::alphaExtractVal(Jeu const &jeu, int alpha, int beta, std::
                 }
             }
         }
-        return max;
+        return {max, false};
         // std::cout << "return " << maxi.coup << std::endl;
     }
 }
 
-int Joueur_AlphaBeta::alphabeta(Jeu const &jeu, int alpha, int beta, std::chrono::high_resolution_clock::time_point const &start, unsigned int profondeur_max, unsigned int profondeur)
+coup_select Joueur_AlphaBeta::alphabeta(Jeu const &jeu, int alpha, int beta, std::chrono::high_resolution_clock::time_point const &start, unsigned int profondeur_max, unsigned int profondeur)
 {
     int score = 0;
     if (partie_terminee(jeu, score))
-        return score;
+        return {score, false};
 
     // std::cout << "Dans alphabeta" << std::endl;
     // std::cout << "profondeur : " << profondeur << std::endl;
@@ -271,7 +271,7 @@ int Joueur_AlphaBeta::alphabeta(Jeu const &jeu, int alpha, int beta, std::chrono
     // On doit faire un appel récursif pour continuer
     auto coups_valides = std::move(rechercheCoupValide(jeu)); // Liste des coups valides
 
-    int select; // Pour le moment aucun coups n'est joué, donc la valeur actuelle de la partie est nulle
+    coup_select select; // Pour le moment aucun coups n'est joué, donc la valeur actuelle de la partie est nulle
     // Pour chaque coup possible, on explore l'arbre
 
     if ((profondeur % 2) == 1) // minimisant
@@ -284,24 +284,15 @@ int Joueur_AlphaBeta::alphabeta(Jeu const &jeu, int alpha, int beta, std::chrono
         {
             Jeu jeuBis = jeu;
 
-            if (temps_ecoule(start, TEMPS_POUR_UN_COUP))
-            {
-                std::cerr << "timeout dans AB" << std::endl;
-
-                auto coup = info_coup(coups, std::make_shared<Jeu>(jeuBis), (this->joueur() ? 'x' : 'o'), 0);
-                coup.eval(&select);
-                return select;
-            }
-
             jeuBis.joue(coups);
 
             select = alphabeta(jeuBis, alpha, beta, start, PROF_MAX, (profondeur + 1));
 
             // std::cout << "select : " << select << ", min : " << min << std::endl;
 
-            if (select < min)
+            if (select.score < min)
             {
-                min = select;
+                min = select.score;
                 if (min < beta)
                 {
                     beta = min;
@@ -313,8 +304,13 @@ int Joueur_AlphaBeta::alphabeta(Jeu const &jeu, int alpha, int beta, std::chrono
                     }
                 }
             }
+            if (select.timeout)
+            {
+                std::cerr << "timeout dans AB" << std::endl;
+                return {min, true};
+            }
         }
-        return min;
+        return {min, select.timeout};
     }
     else
     {
@@ -326,21 +322,14 @@ int Joueur_AlphaBeta::alphabeta(Jeu const &jeu, int alpha, int beta, std::chrono
         {
             Jeu jeuBis = jeu;
 
-            if (temps_ecoule(start, TEMPS_POUR_UN_COUP))
-            {
-                std::cerr << "timeout dans AB" << std::endl;
-                auto coup = info_coup(coups, std::make_shared<Jeu>(jeuBis), (this->joueur() ? 'o' : 'x'), 0);
-                coup.eval(&select);
-                return select;
-            }
             jeuBis.joue(coups);
             select = alphabeta(jeuBis, alpha, beta, start, PROF_MAX, profondeur + 1);
 
             // std::cout << "select : " << select << ", max : " << max << std::endl;
 
-            if (select > max)
+            if (select.score > max)
             {
-                max = select;
+                max = select.score;
                 if (max > alpha)
                 {
                     alpha = max;
@@ -352,13 +341,19 @@ int Joueur_AlphaBeta::alphabeta(Jeu const &jeu, int alpha, int beta, std::chrono
                     }
                 }
             }
+            if (select.timeout)
+            {
+                std::cerr << "timeout dans AB" << std::endl;
+                return {max, true};
+            }
         }
-        return max;
+        return {max, select.timeout};
         // std::cout << "return " << maxi.coup << std::endl;
     }
 }
 
 // Le threading concède l'élagage sur la première couche, et n'est donc pas rentable. Il fallait essayer....
+/*
 Brix Joueur_AlphaBeta::alphabetaThreadCallback(Jeu const &jeu, std::chrono::high_resolution_clock::time_point const &start, unsigned int profondeur_max)
 {
     int alpha = MOINS_INFINI;
@@ -391,13 +386,14 @@ Brix Joueur_AlphaBeta::alphabetaThreadCallback(Jeu const &jeu, std::chrono::high
     delete[] res_coups;
     return coups_valides->at(i_max);
 }
+*/
 
 Brix Joueur_AlphaBeta::alphabetaCallback(Jeu const &jeu, std::chrono::high_resolution_clock::time_point const &start, unsigned int profondeur_max)
 {
     // On doit faire un appel récursif pour continuer
     auto coups_valides = std::move(rechercheCoupValide(jeu)); // Liste des coups valides
 
-    int select;
+    coup_select select;
 
     int alpha = MOINS_INFINI;
     int beta = PLUS_INFINI;
@@ -412,12 +408,6 @@ Brix Joueur_AlphaBeta::alphabetaCallback(Jeu const &jeu, std::chrono::high_resol
 
         // std::cout << "prof 0 maximisant" << std::endl;
 
-        if (temps_ecoule(start, TEMPS_POUR_UN_COUP))
-        {
-            std::cerr << "timeout dans CB" << std::endl;
-            return coups_valides->at(i_maxi);
-        }
-
         Jeu jeuBis = jeu;
         jeuBis.joue(coups_valides->at(i));
 
@@ -425,11 +415,16 @@ Brix Joueur_AlphaBeta::alphabetaCallback(Jeu const &jeu, std::chrono::high_resol
 
         // std::cout << "select : " << select << ", max : " << maxi << std::endl;
 
-        if (select > maxi)
+        if (select.score > maxi)
         {
-            maxi = select;
-            alpha = select;
+            maxi = select.score;
+            alpha = select.score;
             i_maxi = i;
+        }
+        if (select.timeout)
+        {
+            std::cerr << "timeout dans CB" << std::endl;
+            return coups_valides->at(i_maxi);
         }
     }
     // std::cout << "return " << maxi << std::endl;
@@ -439,11 +434,10 @@ Brix Joueur_AlphaBeta::alphabetaCallback(Jeu const &jeu, std::chrono::high_resol
 void Joueur_AlphaBeta::recherche_coup(Jeu jeu, Brix &coup)
 {
     std::chrono::time_point<std::chrono::high_resolution_clock> start = std::chrono::high_resolution_clock::now();
-    // std::cout << "Création coup" << std::endl;
-    // std::cout << "test" << std::endl;
-    std::cout << "DANS RECHERCHE" << std::endl;
+    // std::cout << "DANS RECHERCHE" << std::endl;
+    std::cout << "---------" << std::endl;
     coup = alphabetaCallback(jeu, start, PROF_MAX);
-    std::cout << "Coup JOUÉ :" << coup << std::endl;
+    // std::cout << "Coup JOUÉ :" << coup << std::endl;
     return;
     // coup.setAllCoord(ret.getAx(), ret.getOx(), ret.getAo(), ret.getOo());
 }
