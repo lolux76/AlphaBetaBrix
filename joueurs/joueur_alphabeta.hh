@@ -37,7 +37,7 @@ public:
 
   bool inline temps_ecoule(std::chrono::high_resolution_clock::time_point const &start, short unsigned int TEMPS_POUR_UN_COUP) const
   {
-    return ((std::chrono::high_resolution_clock::now() - start) > std::chrono::microseconds(10000 - 1500));
+    return ((std::chrono::high_resolution_clock::now() - start) > std::chrono::microseconds(10000 - 500));
   }
 
   bool inline partie_terminee(Jeu const &j, int &score)

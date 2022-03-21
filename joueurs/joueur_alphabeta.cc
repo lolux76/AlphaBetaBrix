@@ -224,7 +224,7 @@ coup_select Joueur_AlphaBeta::alphaExtractVal(Jeu const &jeu, int alpha, int bet
                 return {max, true};
             }
 
-            auto coup = info_coup(coups_valides->at(i), jeu_eval, (this->joueur() ? 'o' : 'x'), 0);
+            auto coup = info_coup(coups_valides->at(i), jeu_eval, (this->joueur() ? 'x' : 'o'), 0);
             coup.eval(&select);
 
             // std::cout << "select : " << select << ", max : " << max << std::endl;
